@@ -1,1 +1,4 @@
 *.pyc
+build-unit_tests-Desktop-Default/
+unit_tests/CMakeLists.txt.user
+
