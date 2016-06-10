@@ -126,6 +126,16 @@ def parse_arguments():
 def complain_about_input_file():
     print "You need to input datalog file"
 
+def get_date(input_files):
+    log_prefix = 'DATALOG_'
+    if log_prefix in input_files:
+        date = input_files.lstrip(log_prefix).rstrip('.TXT')
+        print "date : %s" % date
+        return date
+    else:
+        print "could not resolve date"
+        return "None"
+
 if __name__ == '__main__':
     input_files, options = parse_arguments()
     print "Input files are %s" % input_files
@@ -136,7 +146,7 @@ if __name__ == '__main__':
     if options.is_empty():
         options.complain()
         exit()
-    date = input_files.lstrip('DATALOG_').rstrip('.TXT')
+    date = get_date(input_files)
     path = os.path.dirname(os.path.abspath(input_files))
     acc_graph = tilt_graph()
     acc_graph.setup(input_files, options.scope)
@@ -151,7 +161,7 @@ if __name__ == '__main__':
         attributes = ('x', 'y', 'z')
         for attribute in attributes:
             file_name = path + '/' 'acceleration_' + date + '_' + attribute + '_' + str(options.scope) + '.png'
-            #print "Attribute %s to file %s" % (attribute, file_name)
+            print "Attribute %s to file %s" % (attribute, file_name)
             acc_graph.print_to_file(attribute, file_name, 'right')
             graph_files.append(file_name)
         #file_name = path + '/' 'acceleration_' + date + '_' + str(attributes) + '_' + str(options.scope) + '.png'

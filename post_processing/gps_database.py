@@ -54,7 +54,7 @@ class Entry():
         return (self.line in other.line)
 
 class Gps_database():
-    def __init__(self, file_name, scope):
+    def __init__(self, file_name, scope=None):
         lines = file_reader.get_lines(file_name, 'HDOP')
         valid_lines = self.get_valid_lines(lines)
         print 'number of GPS entries: %d, valid: %d' % (len(lines), len(valid_lines))
@@ -95,7 +95,10 @@ class Gps_database():
                 duplicate_entries.append(entries[entry_index])
             else:
                 non_duplicate_entries.append(entries[entry_index])
-        print "Duplicate entries: %d between %s" % (len(duplicate_entries), duplicate_entries[0].line)
+        if duplicate_entries:
+            print "Duplicate entries: %d between %s" % (len(duplicate_entries), duplicate_entries[0].line)
+        else:
+            print "No duplicate entries!"
         self.entries = non_duplicate_entries
         print "Entries: %d" % len(self.entries)
     def remove_entries(self, pause_entries):
