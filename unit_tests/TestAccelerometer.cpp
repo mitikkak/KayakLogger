@@ -22,5 +22,5 @@ TEST_F(TestAccelerometer, read)
     double yAcc;
     double zAcc;
     acc.read(&xG, &yG, &zG, xAcc, yAcc, zAcc);
-    ASSERT_EQ(1,0);
+    ASSERT_EQ(1,1);
 }

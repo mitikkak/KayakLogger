@@ -64,76 +64,7 @@ struct ElementQueue
   Element* elems[maximum];
 };
 
-class StatusIndicator
-{
-  public:
-  enum Status
-  {
-  Status_ok = 0,
-  Status_sdAppendFailed = 1,
-  Status_hdopUnreliable = 2
-  };
-
-  StatusIndicator(const int p): pin(p), currentState(Status_ok),
-     queue(Status_ok){}
-  void init()
-  {
-    pinMode(pin, OUTPUT);
-    startNextState(Status_ok, millis());
-  }
-  void newEvent(Status const st, int const milliSecs)
-  {
-//    Serial.print("new st:"); Serial.print(st); Serial.print(",at:"); Serial.println(milliSecs);
-    if (currentState == Status_ok && st != Status_ok)
-    {
-      startNextState(st, milliSecs);
-    }
-    else if (queue == Status_ok)
-    {
-      queue = st;
-    }
-  }
-  void continueCurrentState(int const milliSecs)
-  {
-    if (milliSecs - periodStartedAt > schedulingPeriod)
-    {
-      currentSchedule = currentSchedule >> 1;
-      if (currentSchedule == 0)
-      {
-//        Serial.print("queue:");Serial.println(queue);
-        startNextState(queue, milliSecs);
-        queue = Status_ok;
-      }
-      nextPeriod(milliSecs);
-    }
-  }
-  private:
-  static const int schedulingPeriod = 1000;
-  static const int okSchedule = 0x20; // 5sec LOW, 1 sec HIGH
-  static const int sdFailSchedule = 0x2A; // 1sec LOW, 1 sec HIGH
-  static const int hdopFailSchedule = 0x3F; // HIGH
-
-  void startNextState(Status const st, int const milliSecs)
-  {
-    periodStartedAt = milliSecs;
-    currentState = st;
-    if (st == Status_ok) currentSchedule = okSchedule;
-    if (st == Status_sdAppendFailed) currentSchedule = sdFailSchedule;
-    if (st == Status_hdopUnreliable) currentSchedule = hdopFailSchedule;
-  }
-  void nextPeriod(const int milliSecs)
-  {
-    const int nextLedState = currentSchedule & 0x1;
-//    Serial.print("sch:");Serial.print(currentSchedule);Serial.print(",nextLedState:"); Serial.print(nextLedState); Serial.print(", at:");Serial.println(milliSecs);
-    digitalWrite(pin, nextLedState);
-    periodStartedAt = milliSecs;
-  }
-  const int pin;
-  int periodStartedAt;
-  int currentSchedule;
-  Status currentState;
-  Status queue;
-};
+#include "StatusIndicator.h"
 
 class Logger
 {
@@ -171,14 +102,14 @@ StatusIndicator::Status myLogEvent(ElementQueue& queue)
   // create or open a file for append
   ofstream sdlog("LOGS/datalog.txt", ios::out | ios::app);
   bool somethingWasWritten = false;
-  
+
   sdlog.precision(6);
   // append a line to the file
-  
+
   while (queue.peek())
   {
-    
-    
+
+
     Element* element = queue.pop();
     if (element)
     {
@@ -188,8 +119,8 @@ StatusIndicator::Status myLogEvent(ElementQueue& queue)
       sdlog << " ; ";
     }
   }
-  
-  
+
+
   if (somethingWasWritten)
   {
     sdlog << endl;
