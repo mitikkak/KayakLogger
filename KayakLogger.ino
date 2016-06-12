@@ -22,13 +22,6 @@
 ADXL345 acc;
 #endif
 
-
-const float alpha = 0.5;
-
-double fXg = 0;
-double fYg = 0;
-double fZg = 0;
-
 Logger logger(10);
 StatusIndicator statusIndicator(5);
 #ifdef GPS_ON
@@ -55,15 +48,19 @@ void setup()
   prevTimeGpsHandled = millis();
 }
 
-StatusIndicator::Status writeTiltReport();
-StatusIndicator::Status writeGpsReport();
-void readGps();
+
+#include "TiltReport.h"
+#ifdef GPS_ON
+#include "GpsReport.h"
+#endif
+
 void loop()
 {
   unsigned long timeNow = millis();
   if (timeNow - prevTimeTiltHandled > TILT_MEASUREMENT_PERIOD)
   {
-    StatusIndicator::Status const reportStatus = writeTiltReport();
+      TiltReport tiltReport;
+    StatusIndicator::Status const reportStatus = tiltReport.write(logger);
     statusIndicator.newEvent(reportStatus, timeNow);
     prevTimeTiltHandled = timeNow;
   }
@@ -71,7 +68,7 @@ void loop()
   if (timeNow - prevTimeGpsHandled > GPS_MEASUREMENT_PERIOD)
   {
       GpsReport gpsReport;
-    StatusIndicator::Status const reportStatus = gpsReport.write();
+    StatusIndicator::Status const reportStatus = gpsReport.write(logger);
     statusIndicator.newEvent(reportStatus, timeNow);
     prevTimeGpsHandled = timeNow;
   }
@@ -83,44 +80,5 @@ void loop()
   statusIndicator.continueCurrentState(timeNow);
 }
 
-StatusIndicator::Status writeTiltReport()
-{
-  double pitch, roll, Xg, Yg, Zg = 0;
-  #ifdef ACCELEROMETER_ON
-  double xAcc, yAcc, zAcc = 0;
-  acc.read(&Xg, &Yg, &Zg, xAcc, yAcc, zAcc);
-  #endif
-  //Low Pass Filter
-  fXg = Xg * alpha + (fXg * (1.0 - alpha));
-  fYg = Yg * alpha + (fYg * (1.0 - alpha));
-  fZg = Zg * alpha + (fZg * (1.0 - alpha));
-  //Roll & Pitch Equations
-  roll  = (atan2(-fYg, fZg)*180.0)/M_PI;
-  pitch = (atan2(fXg, sqrt(fYg*fYg + fZg*fZg))*180.0)/M_PI;
-#ifdef RUNTIME_SERIAL_ON
-  Serial.print(pitch);
-  Serial.print(":");
-  Serial.println(roll);
-#endif
-  const unsigned long milliSecs = millis();
-  LogElement<unsigned long> millisElement("millis", milliSecs);
-  LogElement<double> rollElement("roll", roll);
-  LogElement<double> pitchElement("pitch", pitch);
-  LogElement<double> xElement("x", xAcc);
-  LogElement<double> yElement("y", yAcc);
-  LogElement<double> zElement("z", zAcc);
-  ElementQueue queue;
-  queue.push(&zElement);
-  queue.push(&yElement);
-  queue.push(&xElement);
-  queue.push(&rollElement);
-  queue.push(&pitchElement);
-  queue.push(&millisElement);
-  return logger.myLogEvent(queue);
-}
-
-#ifdef GPS_ON
-#include "GpsReport.h"
-#endif
 
 
