@@ -1,4 +1,7 @@
 
+#ifndef _ELEMENT_QUEUE_H
+#define _ELEMENT_QUEUE_H
+
 struct Element
 {
   explicit Element(const char *p_msg);
@@ -25,3 +28,5 @@ struct ElementQueue
   int numOf;
   Element* elems[maximum];
 };
+
+#endif

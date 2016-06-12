@@ -1,4 +1,6 @@
 
+#ifndef _STATUS_INDICATOR_H
+#define _STATUS_INDICATOR_H
 class StatusIndicator
 {
   public:
@@ -27,3 +29,4 @@ class StatusIndicator
   Status currentState;
   Status queue;
 };
+#endif

@@ -12,6 +12,10 @@ LogElement<TYPE>::LogElement(const char *p_msg, TYPE const val):
   Element(p_msg), value(val)
 {
 }
+template class LogElement<unsigned long>;
+template class LogElement<float>;
+template class LogElement<int>;
+
 template <class TYPE>
 void LogElement<TYPE>::outputValue(ofstream& sdlog) const
 {
