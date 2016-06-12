@@ -13,56 +13,7 @@
 #define GPS_MEASUREMENT_PERIOD 2000
 #define HDOP_UNRELIABLE 900
 
-struct Element
-{
-  explicit Element(const char *p_msg): msg(p_msg) {}
-  const char *msg;
-  virtual void outputValue(ofstream& sdlog) const = 0;
-};
-
-template <class TYPE>
-struct LogElement : public Element
-{
-  explicit LogElement(const char *p_msg, TYPE const val):
-  Element(p_msg), value(val) {}
-  void outputValue(ofstream& sdlog) const
-  {
-    sdlog << value;
-  }
-  TYPE const value;
-};
-
-struct ElementQueue
-{
-  ElementQueue():
-  numOf(0)
-  { for (int i = 0; i < maximum; i++) {elems[i] = 0;} }
-  void push(Element* elem)
-  {
-    if (numOf < maximum)
-    {
-      elems[numOf] = elem;
-      numOf++;
-    }
-  }
-  bool peek() const
-  {
-    return (numOf>0);
-  }
-  Element* pop()
-  {
-    if (numOf > 0)
-    {
-      numOf--;
-      return elems[numOf];
-    }
-    return 0;
-  }
-  private:
-  static const int maximum = 11;
-  int numOf;
-  Element* elems[maximum];
-};
+#include "ElementQueue.h"
 
 #include "StatusIndicator.h"
 
