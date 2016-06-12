@@ -16,6 +16,8 @@ include_directories(${KAYAK_LOGGER_SRC_DIR})
 include_directories(${ACCELEROMETER_DIR})
 include_directories(${STUBS_DIR})
 
+add_definitions(-DUNIT_TEST)
+
 set( CMAKE_BUILD_TYPE Debug)
 aux_source_directory(. TEST_SRC)
 aux_source_directory(${ACCELEROMETER_DIR} ACCELEROMETER_SRC)

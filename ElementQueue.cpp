@@ -1,4 +1,8 @@
 
+#ifdef UNIT_TEST
+#include <fstream>
+using namespace std;
+#endif
 #include "ElementQueue.h"
 
 Element::Element(const char *p_msg): msg(p_msg) {}

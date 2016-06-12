@@ -1,6 +1,4 @@
 
-struct ofstream;
-
 struct Element
 {
   explicit Element(const char *p_msg);

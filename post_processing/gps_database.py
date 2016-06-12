@@ -77,7 +77,7 @@ class Gps_database():
     def create_entries(self, lines, scope):
         entries = []
         for line in lines:
-            speed = float(re.search(r'Spe:(.*); C:', line).group(1))
+            speed = float(re.search(r'Spe:(.*);', line).group(1))
             latitude = float(re.search(r'Lat:(.*); Lon:', line).group(1))
             longitude = float(re.search(r'Lon:(.*); Y:', line).group(1))
             seconds = int(re.search(r'S:(.*); Spe:', line).group(1))
