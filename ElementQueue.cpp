@@ -1,10 +1,5 @@
 
-#ifdef UNIT_TEST
-#include <fstream>
-using namespace std;
-#else
-#include <SdFat.h>
-#endif
+#include "fstream_headers.h"
 #include "ElementQueue.h"
 
 Element::Element(const char *p_msg): msg(p_msg) {}

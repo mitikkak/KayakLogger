@@ -1,9 +1,6 @@
 
 #include "StatusIndicator.h"
-#ifdef UNIT_TEST
-#include <fstream>
-using namespace std;
-#endif
+#include "fstream_headers.h"
 #include "ElementQueue.h"
 #include "Logger.h"
 #include "TiltReport.h"

@@ -11,10 +11,7 @@
 #include "TinyGPS.h"
 #endif
 #include "StatusIndicator.h"
-#ifdef UNIT_TEST
-#include <fstream>
-using namespace std;
-#endif
+#include "fstream_headers.h"
 #include "Logger.h"
 #include "GpsReport.h"
 
