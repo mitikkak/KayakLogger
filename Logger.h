@@ -1,4 +1,7 @@
 
+#ifndef _LOGGER_H
+#define _LOGGER_H
+
 #include "StatusIndicator.h"
 #include "ElementQueue.h"
 struct SdFat;
@@ -11,3 +14,5 @@ class Logger
   void initSdCard();
   StatusIndicator::Status myLogEvent(ElementQueue& queue);
 };
+
+#endif

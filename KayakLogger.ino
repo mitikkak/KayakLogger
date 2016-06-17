@@ -5,12 +5,7 @@
 
 #include <TinyGPS.h>
 
-#define GPS_ON
-#define ACCELEROMETER_ON
-//#define RUNTIME_SERIAL_ON
-
-#define TILT_MEASUREMENT_PERIOD 20
-#define GPS_MEASUREMENT_PERIOD 2000
+#include "PreCompilerOptions.h"
 
 #include "ElementQueue.h"
 
@@ -18,36 +13,9 @@
 
 #include "Logger.h"
 
-#ifdef ACCELEROMETER_ON
-ADXL345 acc;
-#endif
+#include "Components.h"
 
-Logger logger(10);
-StatusIndicator statusIndicator(5);
-#ifdef GPS_ON
-TinyGPS gps;
-SoftwareSerial ss(4, 3);
-#endif
-unsigned long prevTimeTiltHandled, prevTimeGpsHandled;
-void setup()
-{
-  #ifdef ACCELEROMETER_ON
-  acc.begin();
-  #endif
-#ifdef RUNTIME_SERIAL_ON
-  Serial.begin(115200);
-#endif
-  #ifdef GPS_ON
-  ss.begin(9600);
-  #endif
-  logger.initSdCard();
-  delay(100);
-  acc.setRange(ADXL345::RANGE_4G);
-  statusIndicator.init();
-  prevTimeTiltHandled = millis();
-  prevTimeGpsHandled = millis();
-}
-
+#include "Setup.h"
 
 #include "TiltReport.h"
 #ifdef GPS_ON
@@ -67,14 +35,15 @@ void loop()
 #ifdef GPS_ON
   if (timeNow - prevTimeGpsHandled > GPS_MEASUREMENT_PERIOD)
   {
-      GpsReport gpsReport;
+    GpsReport gpsReport(ss, gps);
     StatusIndicator::Status const reportStatus = gpsReport.write(logger);
     statusIndicator.newEvent(reportStatus, timeNow);
     prevTimeGpsHandled = timeNow;
   }
   else
   {
-    readGps();
+      GpsReport gpsReport(ss, gps);
+      gpsReport.readGps();
   }
 #endif
   statusIndicator.continueCurrentState(timeNow);

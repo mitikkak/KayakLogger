@@ -5,6 +5,7 @@
 void pinMode(const int pin, const int mode);
 long millis();
 void digitalWrite(const int pin, const int state);
+void delay(const int millis);
 
 static const int OUTPUT = 1;
 static const int HIGH = 1;
