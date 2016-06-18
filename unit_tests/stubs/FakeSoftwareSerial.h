@@ -8,3 +8,5 @@ public:
     bool available() const;
     char read() const;
 };
+
+extern SoftwareSerial Serial;

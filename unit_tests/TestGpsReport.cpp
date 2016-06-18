@@ -25,7 +25,6 @@ public:
 
 TEST_F(TestGpsReport, construct)
 {
-    SoftwareSerial ss(0,0);
     TinyGPS gps;
-    GpsReport r(ss, gps);
+    GpsReport r(gps);
 }

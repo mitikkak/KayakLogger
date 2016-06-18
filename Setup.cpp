@@ -9,10 +9,11 @@ void setup()
   acc.begin();
   #endif
 #ifdef RUNTIME_SERIAL_ON
+#error use something else here!
   Serial.begin(115200);
 #endif
   #ifdef GPS_ON
-  ss.begin(9600);
+  Serial.begin(9600);
   #endif
   logger.initSdCard();
   delay(100);

@@ -16,7 +16,7 @@ void loop()
     prevTimeTiltHandled = timeNow;
   }
 #ifdef GPS_ON
-  GpsReport gpsReport(ss, gps);
+  GpsReport gpsReport(gps);
   if (timeNow - prevTimeGpsHandled > GPS_MEASUREMENT_PERIOD)
   {
 

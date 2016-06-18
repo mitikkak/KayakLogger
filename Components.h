@@ -23,14 +23,12 @@ extern Logger logger;
 extern StatusIndicator statusIndicator;
 #ifdef GPS_ON
 #ifdef UNIT_TEST
-#include "FakeTinyGPS.h"
 #include "FakeSoftwareSerial.h"
+#include "FakeTinyGPS.h"
 #else
 #include "TinyGPS.h"
-#include "SoftwareSerial.h"
 #endif
 extern TinyGPS gps;
-extern SoftwareSerial ss;
 #endif
 extern LiquidCrystal lcd;
 extern unsigned long prevTimeTiltHandled;

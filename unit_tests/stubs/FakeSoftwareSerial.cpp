@@ -1,6 +1,7 @@
 
 #include "FakeSoftwareSerial.h"
 
+SoftwareSerial Serial(0,1);
 unsigned int SoftwareSerial::available_rounds = 0;
 SoftwareSerial::SoftwareSerial(const int, const int)
 {}

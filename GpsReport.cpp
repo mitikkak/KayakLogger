@@ -7,7 +7,6 @@
 #include "FakeSoftwareSerial.h"
 #include "FakeTinyGPS.h"
 #else
-#include "SoftwareSerial.h"
 #include "TinyGPS.h"
 #endif
 #include "StatusIndicator.h"
@@ -21,9 +20,9 @@
 
 void GpsReport::readGps()
 {
-  while (ss.available())
+  while (Serial.available())
   {
-      gps.encode(ss.read());
+      gps.encode(Serial.read());
   }
 }
 StatusIndicator::Status GpsReport::write(Logger& logger)
