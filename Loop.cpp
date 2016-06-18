@@ -3,6 +3,7 @@
 #include "Arduino.h"
 #include "Components.h"
 #include "TiltReport.h"
+#include "GpsReport.h"
 
 void loop()
 {
@@ -15,18 +16,23 @@ void loop()
     prevTimeTiltHandled = timeNow;
   }
 #ifdef GPS_ON
+  GpsReport gpsReport(ss, gps);
   if (timeNow - prevTimeGpsHandled > GPS_MEASUREMENT_PERIOD)
   {
-    GpsReport gpsReport(ss, gps);
+
     StatusIndicator::Status const reportStatus = gpsReport.write(logger);
     statusIndicator.newEvent(reportStatus, timeNow);
     prevTimeGpsHandled = timeNow;
+    SpeedMessage msg = gpsReport.speedMessage();
+    lcd.clear();
+    lcd.setCursor(0, 1);
+    lcd.print(msg.header);lcd.print(msg.value, 3);
   }
   else
   {
-      GpsReport gpsReport(ss, gps);
       gpsReport.readGps();
   }
 #endif
+
   statusIndicator.continueCurrentState(timeNow);
 }

@@ -22,4 +22,5 @@ void setup()
   statusIndicator.init();
   prevTimeTiltHandled = millis();
   prevTimeGpsHandled = millis();
+  lcd.begin(20, 2);
 }

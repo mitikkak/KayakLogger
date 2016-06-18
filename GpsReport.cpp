@@ -46,13 +46,14 @@ StatusIndicator::Status GpsReport::write(Logger& logger)
   int year;
   byte month, day, hour, minute, second;
   gps.crack_datetime(&year, &month, &day, &hour, &minute, &second, 0,0);
+  speed = gps.f_speed_kmph();
   LogElement<int> yearElement("Y", year);
   LogElement<int> monthElement("Mo", month);
   LogElement<int> dayElement("D", day);
   LogElement<int> hourElement("H", hour);
   LogElement<int> minuteElement("Mi", minute);
   LogElement<int> secondElement("S", second);
-  LogElement<float> speedElement("Spe", gps.f_speed_kmph());
+  LogElement<float> speedElement("Spe", speed);
   //LogElement<float> courseElement("C", gps.f_course());
   ElementQueue queue;
   //queue.push(&courseElement);
@@ -68,4 +69,11 @@ StatusIndicator::Status GpsReport::write(Logger& logger)
   queue.push(&hdopElement);
   StatusIndicator::Status const logStatus = logger.myLogEvent(queue);
   return (logStatus != StatusIndicator::Status_ok) ? logStatus : gpsStatus;
+}
+SpeedMessage GpsReport::speedMessage() const
+{
+    SpeedMessage msg;
+    msg.header = "Speed: ";
+    msg.value = speed;
+    return msg;
 }
