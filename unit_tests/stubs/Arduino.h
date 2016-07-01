@@ -3,6 +3,10 @@
 #define _ARDUINO_H
 //#define ARDUINO 100
 void pinMode(const int pin, const int mode);
+namespace Arduino
+{
+    extern long timeNow;
+}
 long millis();
 void digitalWrite(const int pin, const int state);
 void delay(const int millis);

@@ -1,13 +1,14 @@
 
 #include "Arduino.h"
 
+long Arduino::timeNow = 0;
 void pinMode(const int pin, const int mode)
 {
 
 }
 long millis()
 {
-    return 0;
+    return Arduino::timeNow;
 }
 void delay(const int millis)
 {

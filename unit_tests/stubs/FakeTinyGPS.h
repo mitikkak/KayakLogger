@@ -2,6 +2,12 @@
 class TinyGPS
 {
 public:
+    static unsigned int encodeCounter;
+    static unsigned int hdopCounter;
+    static unsigned int getPosCounter;
+    static unsigned int crackCounter;
+    static unsigned int speedCounter;
+    static void initCounters();
     void encode(const char) const;
     unsigned long const hdop() const;
     void f_get_position(float*, float*, const int) const;
