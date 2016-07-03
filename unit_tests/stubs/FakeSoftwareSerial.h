@@ -1,4 +1,6 @@
 
+#ifndef _FAKE_SOFTWARE_SERIAL_H
+#define _FAKE_SOFTWARE_SERIAL_H
 class SoftwareSerial
 {
 public:
@@ -10,3 +12,4 @@ public:
 };
 
 extern SoftwareSerial Serial;
+#endif

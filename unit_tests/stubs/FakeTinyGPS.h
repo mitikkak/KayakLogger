@@ -1,4 +1,6 @@
 
+#ifndef _FAKE_TINY_GPS_H
+#define _FAKE_TINY_GPS_H
 class TinyGPS
 {
 public:
@@ -15,3 +17,4 @@ public:
                         int, int) const;
     float f_speed_kmph() const;
 };
+#endif
