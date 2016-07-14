@@ -1,8 +1,9 @@
-
+#include "PreCompilerOptions.h"
 #include "StatusIndicator.h"
 #include "fstream_headers.h"
 #include "ElementQueue.h"
 #include "Logger.h"
+#include "ADXL345.h"
 #include "TiltReport.h"
 
 #ifdef UNIT_TEST
@@ -35,18 +36,18 @@ StatusIndicator::Status TiltReport::write(Logger& logger)
   Serial.println(roll);
 #endif
   const unsigned long milliSecs = millis();
-  LogElement<unsigned long> millisElement("millis", milliSecs);
-  LogElement<double> rollElement("roll", roll);
-  LogElement<double> pitchElement("pitch", pitch);
-  LogElement<double> xElement("x", xAcc);
-  LogElement<double> yElement("y", yAcc);
-  LogElement<double> zElement("z", zAcc);
+  Element* millisElement = new LogElement<unsigned long> ("millis", milliSecs);
+  Element* rollElement = new LogElement<double> ("roll", roll);
+  Element* pitchElement = new LogElement<double>("pitch", pitch);
+  Element* xElement = new LogElement<double>("x", xAcc);
+  Element* yElement = new LogElement<double>("y", yAcc);
+  Element* zElement = new LogElement<double>("z", zAcc);
   ElementQueue queue;
-  queue.push(&zElement);
-  queue.push(&yElement);
-  queue.push(&xElement);
-  queue.push(&rollElement);
-  queue.push(&pitchElement);
-  queue.push(&millisElement);
+  queue.push(zElement);
+  queue.push(yElement);
+  queue.push(xElement);
+  queue.push(rollElement);
+  queue.push(pitchElement);
+  queue.push(millisElement);
   return logger.myLogEvent(queue);
 }

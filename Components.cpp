@@ -2,7 +2,7 @@
 #include "Components.h"
 
 #ifdef ACCELEROMETER_ON
-ADXL345 acc;
+ADXL345 accMeter;
 #endif
 SdFat sdFat;
 Logger logger(sdFat, 10);

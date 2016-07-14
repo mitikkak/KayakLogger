@@ -3,6 +3,10 @@
 #include "ElementQueue.h"
 
 Element::Element(const char *p_msg): msg(p_msg) {}
+Element::~Element()
+{
+//    printf("\n element %s at %p IS DYING", msg, this);
+}
 
 template <class TYPE>
 LogElement<TYPE>::LogElement(const char *p_msg, TYPE const val):
@@ -22,12 +26,25 @@ void LogElement<TYPE>::outputValue(ofstream& sdlog) const
 ElementQueue::ElementQueue():
 numOf(0)
 { for (int i = 0; i < maximum; i++) {elems[i] = 0;} }
+ElementQueue::~ElementQueue()
+{
+}
+
+ElementQueue::ElementQueue(const ElementQueue& another)
+{
+    numOf = 0;
+    for(int i = 0; i < another.numOf; i++)
+    {
+        this->push(another.elems[i]);
+    }
+}
 
 void ElementQueue::push(Element* elem)
 {
   if (numOf < maximum)
   {
     elems[numOf] = elem;
+//    printf("\n push %s at %p", elem->msg, elem);
     numOf++;
   }
 }
@@ -40,7 +57,9 @@ Element* ElementQueue::pop()
   if (numOf > 0)
   {
     numOf--;
-    return elems[numOf];
+    Element* ret = elems[numOf];
+    elems[numOf] = 0;
+    return ret;
   }
   return 0;
 }

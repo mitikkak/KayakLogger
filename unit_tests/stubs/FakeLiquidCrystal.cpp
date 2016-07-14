@@ -1,5 +1,6 @@
 
 #include "FakeLiquidCrystal.h"
+#include <gtest/gtest.h>
 
 unsigned int LiquidCrystal::clearCounter = 0;
 unsigned int LiquidCrystal::cursorCounter = 0;
@@ -25,9 +26,14 @@ void LiquidCrystal::print(float const value, const int precision) const
 }
 void LiquidCrystal::clear() const
 {
-   clearCounter++;
+    clearCounter++;
 }
-void LiquidCrystal::setCursor(const int, const int) const
+void LiquidCrystal::setCursor(const int column, const int row) const
 {
-   cursorCounter++;
+    EXPECT_EQ(0, column);
+    if (!cursorCounter)
+    {
+        EXPECT_EQ(1, row);
+    }
+    cursorCounter++;
 }

@@ -5,6 +5,7 @@
 struct Element
 {
   explicit Element(const char *p_msg);
+  ~Element();
   const char *msg;
   virtual void outputValue(ofstream& sdlog) const = 0;
 };
@@ -20,13 +21,17 @@ struct LogElement : public Element
 struct ElementQueue
 {
   ElementQueue();
+  ~ElementQueue();
+  ElementQueue(const ElementQueue& another);
   void push(Element* elem);
   bool peek() const;
   Element* pop();
-  private:
+
+private:
   static const int maximum = 11;
   int numOf;
   Element* elems[maximum];
+
 };
 
 #endif

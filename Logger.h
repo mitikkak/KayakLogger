@@ -12,7 +12,7 @@ class Logger
   SdFat& sd;
   const int sdCardChipSelect;
   void initSdCard();
-  StatusIndicator::Status myLogEvent(ElementQueue& queue);
+  virtual StatusIndicator::Status myLogEvent(ElementQueue& queue);
 };
 
 #endif

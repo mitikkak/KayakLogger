@@ -63,3 +63,4 @@ TEST_F(TestLoop, lcdDisplayRefreshed)
     EXPECT_EQ(LiquidCrystal::cursorCounter, 1);
     EXPECT_EQ(LiquidCrystal::printCounter, 1);
 }
+

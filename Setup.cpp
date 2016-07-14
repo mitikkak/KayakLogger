@@ -6,7 +6,7 @@
 void setup()
 {
   #ifdef ACCELEROMETER_ON
-  acc.begin();
+  accMeter.begin();
   #endif
 #ifdef RUNTIME_SERIAL_ON
 #error use something else here!
@@ -18,7 +18,7 @@ void setup()
   logger.initSdCard();
   delay(100);
 #ifdef ACCELEROMETER_ON
-  acc.setRange(ADXL345::RANGE_4G);
+  accMeter.setRange(ADXL345::RANGE_4G);
 #endif
   statusIndicator.init();
   prevTimeTiltHandled = millis();

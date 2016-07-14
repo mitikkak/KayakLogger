@@ -75,7 +75,7 @@ class ADXL345
 	
 		//G Reading
                 void read(double *xG, double *yG, double *zG);
-		void read(double *xG, double *yG, double *zG, double& xAcc, double& yAcc, double& zAcc);
+        virtual void read(double *xG, double *yG, double *zG, double& xAcc, double& yAcc, double& zAcc);
 	
 		//Raw reading
 		void read(int *x, int *y, int *z);

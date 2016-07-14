@@ -10,7 +10,7 @@ void loop()
   unsigned long timeNow = millis();
   if (timeNow - prevTimeTiltHandled > TILT_MEASUREMENT_PERIOD)
   {
-      TiltReport tiltReport;
+      TiltReport tiltReport(accMeter);
     StatusIndicator::Status const reportStatus = tiltReport.write(logger);
     statusIndicator.newEvent(reportStatus, timeNow);
     prevTimeTiltHandled = timeNow;

@@ -55,6 +55,7 @@ StatusIndicator::Status Logger::myLogEvent(ElementQueue& queue)
       sdlog << element->msg << ": ";
       element->outputValue(sdlog);
       sdlog << " ; ";
+      delete element;
     }
   }
 

@@ -16,7 +16,7 @@
 
 #ifdef ACCELEROMETER_ON
 #include "ADXL345.h"
-extern ADXL345 acc;
+extern ADXL345 accMeter;
 #endif
 extern SdFat sdFat;
 extern Logger logger;
