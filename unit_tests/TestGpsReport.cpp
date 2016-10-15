@@ -23,8 +23,12 @@ public:
     }
 };
 
-TEST_F(TestGpsReport, construct)
+TEST_F(TestGpsReport, zeroSpeed)
 {
     TinyGPS gps;
     GpsReport r(gps);
+    r.readGps();
+    SpeedMessage m = r.speedMessage();
+    EXPECT_EQ(0.0, m.value);
+    EXPECT_STREQ("Speed: ", m.header);
 }
