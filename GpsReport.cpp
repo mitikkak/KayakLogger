@@ -30,7 +30,7 @@ StatusIndicator::Status GpsReport::write(Logger& logger)
   StatusIndicator::Status gpsStatus = StatusIndicator::Status_ok;
   readGps();
   float latitude, longitude;
-  unsigned long const HDOP = gps.hdop(); //, TinyGPS::GPS_INVALID_HDOP
+  HDOP = gps.hdop(); //, TinyGPS::GPS_INVALID_HDOP
   if (HDOP > HDOP_UNRELIABLE)
   {
     gpsStatus = StatusIndicator::Status_hdopUnreliable;
@@ -70,7 +70,7 @@ StatusIndicator::Status GpsReport::write(Logger& logger)
 SpeedMessage GpsReport::speedMessage() const
 {
     SpeedMessage msg;
-    msg.header = "Speed: ";
+    //msg.header = "Speed: ";
     msg.value = speed;
     return msg;
 }

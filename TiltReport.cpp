@@ -16,6 +16,7 @@ double fYg = 0;
 double fZg = 0;
 const float alpha = 0.5;
 
+#ifdef ACCELEROMETER_ON
 StatusIndicator::Status TiltReport::write(Logger& logger)
 {
   double pitch, roll, Xg, Yg, Zg = 0;
@@ -51,3 +52,4 @@ StatusIndicator::Status TiltReport::write(Logger& logger)
   queue.push(millisElement);
   return logger.myLogEvent(queue);
 }
+#endif

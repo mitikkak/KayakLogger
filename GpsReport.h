@@ -7,7 +7,11 @@ struct SpeedMessage
 
 class GpsReport
 {
+  public:
+  unsigned int HDOP;
+  private:
   TinyGPS& gps;
+  
   float speed;
 public:
   void readGps();

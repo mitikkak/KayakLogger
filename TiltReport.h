@@ -1,4 +1,5 @@
 
+#ifdef ACCELEROMETER_ON
 class TiltReport
 {
     ADXL345& acc;
@@ -8,3 +9,4 @@ public:
     StatusIndicator::Status write(Logger& logger);
 
 };
+#endif
