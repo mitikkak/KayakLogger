@@ -119,7 +119,7 @@ class fstream : public iostream, SdStreamBase {
     /** Internal - do not use
    * \param[out] pos
    */
-  void getpos(fpos_t* pos) {SdBaseFile::getpos(pos);}
+  void getpos(sd_fpos_t* pos) {SdBaseFile::getpos(pos);}
   /** Internal - do not use
    * \param[in] c
    */
@@ -135,7 +135,7 @@ class fstream : public iostream, SdStreamBase {
     return SdStreamBase::seekoff(off, way);
   }
   bool seekpos(pos_type pos) {return SdStreamBase::seekpos(pos);}
-  void setpos(fpos_t* pos) {SdBaseFile::setpos(pos);}
+  void setpos(sd_fpos_t* pos) {SdBaseFile::setpos(pos);}
   bool sync() {return SdStreamBase::sync();}
   pos_type tellpos() {return SdStreamBase::curPosition();}
   /// @endcond
@@ -182,7 +182,7 @@ class ifstream : public istream, SdStreamBase {
   /** Internal - do not use
    * \param[out] pos
    */
-  void getpos(fpos_t* pos) {SdBaseFile::getpos(pos);}
+  void getpos(sd_fpos_t* pos) {SdBaseFile::getpos(pos);}
   /** Internal - do not use
    * \param[in] pos
    */
@@ -190,7 +190,7 @@ class ifstream : public istream, SdStreamBase {
     return SdStreamBase::seekoff(off, way);
   }
   bool seekpos(pos_type pos) {return SdStreamBase::seekpos(pos);}
-  void setpos(fpos_t* pos) {SdBaseFile::setpos(pos);}
+  void setpos(sd_fpos_t* pos) {SdBaseFile::setpos(pos);}
   pos_type tellpos() {return SdStreamBase::curPosition();}
   /// @endcond
 };

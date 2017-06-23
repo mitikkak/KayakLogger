@@ -58,7 +58,7 @@ class ibufstream : public istream {
     setstate(eofbit);
     return -1;
   }
-  void getpos(fpos_t *pos) {
+  void getpos(sd_fpos_t *pos) {
     pos->position = pos_;
   }
   bool seekoff(off_type off, seekdir way) {return false;}
@@ -69,7 +69,7 @@ class ibufstream : public istream {
     }
     return false;
   }
-  void setpos(fpos_t *pos) {
+  void setpos(sd_fpos_t *pos) {
     pos_ = pos->position;
   }
   pos_type tellpos() {
