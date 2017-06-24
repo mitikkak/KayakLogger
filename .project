@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>kayak_logger@KayakLogger</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.cdt.make.core.makeBuilder</name>
+			<triggers>clean,full,incremental,</triggers>
+			<arguments>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.cleanBuildTarget</key>
+					<value>clean</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.enableCleanBuild</key>
+					<value>true</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.append_environment</key>
+					<value>true</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.stopOnError</key>
+					<value>true</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.enabledIncrementalBuild</key>
+					<value>true</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.build.command</key>
+					<value>/usr/bin/make</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.contents</key>
+					<value>org.eclipse.cdt.make.core.activeConfigSettings</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.build.target.inc</key>
+					<value>all</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.build.arguments</key>
+					<value>-j4</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.buildLocation</key>
+					<value>/home/mikko/workspace/KayakLogger</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.useDefaultBuildCmd</key>
+					<value>false</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.environment</key>
+					<value>VERBOSE=1|CMAKE_NO_VERBOSE=1|</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.enableFullBuild</key>
+					<value>true</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.build.target.auto</key>
+					<value>all</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.enableAutoBuild</key>
+					<value>false</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.build.target.clean</key>
+					<value>clean</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.fullBuildTarget</key>
+					<value>all</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.buildArguments</key>
+					<value></value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.build.location</key>
+					<value>/home/mikko/workspace/KayakLogger</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.autoBuildTarget</key>
+					<value>all</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.core.errorOutputParser</key>
+					<value>org.eclipse.cdt.core.MakeErrorParser;org.eclipse.cdt.core.GCCErrorParser;org.eclipse.cdt.core.GASErrorParser;org.eclipse.cdt.core.GLDErrorParser;</value>
+				</dictionary>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>org.eclipse.cdt.make.core.ScannerConfigBuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.eclipse.cdt.make.core.makeNature</nature>
+		<nature>org.eclipse.cdt.make.core.ScannerConfigNature</nature>
+		<nature>org.eclipse.cdt.core.ccnature</nature>
+		<nature>org.eclipse.cdt.core.cnature</nature>
+	</natures>
+	<linkedResources>
+		<link>
+			<name>[Subprojects]</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[exe] kayak_logger</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[exe] kayak_logger/</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[exe] kayak_logger/Source Files</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[exe] kayak_logger/Source Files/Loop.cpp</name>
+			<type>1</type>
+			<location>/home/mikko/workspace/KayakLogger/Loop.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] kayak_logger/Source Files/Setup.cpp</name>
+			<type>1</type>
+			<location>/home/mikko/workspace/KayakLogger/Setup.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] kayak_logger/Source Files/GpsReport.cpp</name>
+			<type>1</type>
+			<location>/home/mikko/workspace/KayakLogger/GpsReport.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] kayak_logger/Source Files/ElementQueue.cpp</name>
+			<type>1</type>
+			<location>/home/mikko/workspace/KayakLogger/ElementQueue.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] kayak_logger/Source Files/LogElement.cpp</name>
+			<type>1</type>
+			<location>/home/mikko/workspace/KayakLogger/LogElement.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] kayak_logger/Source Files/StatusIndicator.cpp</name>
+			<type>1</type>
+			<location>/home/mikko/workspace/KayakLogger/StatusIndicator.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] kayak_logger/Source Files/Logger.cpp</name>
+			<type>1</type>
+			<location>/home/mikko/workspace/KayakLogger/Logger.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] kayak_logger/Source Files/Components.cpp</name>
+			<type>1</type>
+			<location>/home/mikko/workspace/KayakLogger/Components.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] kayak_logger/Source Files/TiltReport.cpp</name>
+			<type>1</type>
+			<location>/home/mikko/workspace/KayakLogger/TiltReport.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] kayak_logger/Source Files/ADXL345.cpp</name>
+			<type>1</type>
+			<location>/home/mikko/workspace/KayakLogger/externals/ADXL345/ADXL345.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] kayak_logger/Source Files/LiquidCrystal.cpp</name>
+			<type>1</type>
+			<location>/home/mikko/arduino-1.6.10/libraries/LiquidCrystal/src/LiquidCrystal.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] kayak_logger/Source Files/Wire.cpp</name>
+			<type>1</type>
+			<location>/home/mikko/arduino-1.6.10/hardware/arduino/avr/libraries/Wire/src/Wire.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] kayak_logger/Source Files/twi.c</name>
+			<type>1</type>
+			<location>/home/mikko/arduino-1.6.10/hardware/arduino/avr/libraries/Wire/src/utility/twi.c</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] kayak_logger/Source Files/ostream.cpp</name>
+			<type>1</type>
+			<location>/home/mikko/workspace/KayakLogger/externals/SdFat/ostream.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] kayak_logger/Source Files/SdStream.cpp</name>
+			<type>1</type>
+			<location>/home/mikko/workspace/KayakLogger/externals/SdFat/SdStream.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] kayak_logger/Source Files/SdFat.cpp</name>
+			<type>1</type>
+			<location>/home/mikko/workspace/KayakLogger/externals/SdFat/SdFat.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] kayak_logger/Source Files/SdBaseFile.cpp</name>
+			<type>1</type>
+			<location>/home/mikko/workspace/KayakLogger/externals/SdFat/SdBaseFile.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] kayak_logger/Source Files/SdVolume.cpp</name>
+			<type>1</type>
+			<location>/home/mikko/workspace/KayakLogger/externals/SdFat/SdVolume.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] kayak_logger/Source Files/Sd2Card.cpp</name>
+			<type>1</type>
+			<location>/home/mikko/workspace/KayakLogger/externals/SdFat/Sd2Card.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] kayak_logger/Source Files/TinyGPS.cpp</name>
+			<type>1</type>
+			<location>/home/mikko/workspace/KayakLogger/externals/TinyGPS/TinyGPS.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] kayak_logger/Source Files/new.cpp</name>
+			<type>1</type>
+			<location>/home/mikko/arduino-1.6.10/hardware/arduino/avr/cores/arduino/new.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] kayak_logger/Source Files/wiring.c</name>
+			<type>1</type>
+			<location>/home/mikko/arduino-1.6.10/hardware/arduino/avr/cores/arduino/wiring.c</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] kayak_logger/Source Files/HardwareSerial1.cpp</name>
+			<type>1</type>
+			<location>/home/mikko/arduino-1.6.10/hardware/arduino/avr/cores/arduino/HardwareSerial1.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] kayak_logger/Source Files/IPAddress.cpp</name>
+			<type>1</type>
+			<location>/home/mikko/arduino-1.6.10/hardware/arduino/avr/cores/arduino/IPAddress.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] kayak_logger/Source Files/CDC.cpp</name>
+			<type>1</type>
+			<location>/home/mikko/arduino-1.6.10/hardware/arduino/avr/cores/arduino/CDC.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] kayak_logger/Source Files/wiring_pulse.c</name>
+			<type>1</type>
+			<location>/home/mikko/arduino-1.6.10/hardware/arduino/avr/cores/arduino/wiring_pulse.c</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] kayak_logger/Source Files/USBCore.cpp</name>
+			<type>1</type>
+			<location>/home/mikko/arduino-1.6.10/hardware/arduino/avr/cores/arduino/USBCore.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] kayak_logger/Source Files/WMath.cpp</name>
+			<type>1</type>
+			<location>/home/mikko/arduino-1.6.10/hardware/arduino/avr/cores/arduino/WMath.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] kayak_logger/Source Files/PluggableUSB.cpp</name>
+			<type>1</type>
+			<location>/home/mikko/arduino-1.6.10/hardware/arduino/avr/cores/arduino/PluggableUSB.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] kayak_logger/Source Files/wiring_analog.c</name>
+			<type>1</type>
+			<location>/home/mikko/arduino-1.6.10/hardware/arduino/avr/cores/arduino/wiring_analog.c</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] kayak_logger/Source Files/HardwareSerial3.cpp</name>
+			<type>1</type>
+			<location>/home/mikko/arduino-1.6.10/hardware/arduino/avr/cores/arduino/HardwareSerial3.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] kayak_logger/Source Files/Stream.cpp</name>
+			<type>1</type>
+			<location>/home/mikko/arduino-1.6.10/hardware/arduino/avr/cores/arduino/Stream.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] kayak_logger/Source Files/wiring_shift.c</name>
+			<type>1</type>
+			<location>/home/mikko/arduino-1.6.10/hardware/arduino/avr/cores/arduino/wiring_shift.c</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] kayak_logger/Source Files/HardwareSerial0.cpp</name>
+			<type>1</type>
+			<location>/home/mikko/arduino-1.6.10/hardware/arduino/avr/cores/arduino/HardwareSerial0.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] kayak_logger/Source Files/Tone.cpp</name>
+			<type>1</type>
+			<location>/home/mikko/arduino-1.6.10/hardware/arduino/avr/cores/arduino/Tone.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] kayak_logger/Source Files/WString.cpp</name>
+			<type>1</type>
+			<location>/home/mikko/arduino-1.6.10/hardware/arduino/avr/cores/arduino/WString.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] kayak_logger/Source Files/WInterrupts.c</name>
+			<type>1</type>
+			<location>/home/mikko/arduino-1.6.10/hardware/arduino/avr/cores/arduino/WInterrupts.c</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] kayak_logger/Source Files/abi.cpp</name>
+			<type>1</type>
+			<location>/home/mikko/arduino-1.6.10/hardware/arduino/avr/cores/arduino/abi.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] kayak_logger/Source Files/Print.cpp</name>
+			<type>1</type>
+			<location>/home/mikko/arduino-1.6.10/hardware/arduino/avr/cores/arduino/Print.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] kayak_logger/Source Files/HardwareSerial.cpp</name>
+			<type>1</type>
+			<location>/home/mikko/arduino-1.6.10/hardware/arduino/avr/cores/arduino/HardwareSerial.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] kayak_logger/Source Files/wiring_digital.c</name>
+			<type>1</type>
+			<location>/home/mikko/arduino-1.6.10/hardware/arduino/avr/cores/arduino/wiring_digital.c</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] kayak_logger/Source Files/main.cpp</name>
+			<type>1</type>
+			<location>/home/mikko/arduino-1.6.10/hardware/arduino/avr/cores/arduino/main.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] kayak_logger/Source Files/hooks.c</name>
+			<type>1</type>
+			<location>/home/mikko/arduino-1.6.10/hardware/arduino/avr/cores/arduino/hooks.c</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] kayak_logger/Source Files/HardwareSerial2.cpp</name>
+			<type>1</type>
+			<location>/home/mikko/arduino-1.6.10/hardware/arduino/avr/cores/arduino/HardwareSerial2.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] kayak_logger/Header Files</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[exe] kayak_logger/CMake Rules</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[exe] kayak_logger/Resources</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[exe] kayak_logger/Object Files</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+	</linkedResources>
+</projectDescription>
