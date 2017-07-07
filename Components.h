@@ -33,3 +33,7 @@ extern TinyGPS gps;
 extern LiquidCrystal lcd;
 extern unsigned long prevTimeTiltHandled;
 extern unsigned long prevTimeGpsHandled;
+#include "AverageSpeed.h"
+extern AverageSpeed averageSpeed;
+#include "Distance.h"
+extern Distance distance;

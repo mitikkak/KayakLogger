@@ -14,3 +14,5 @@ TinyGPS gps;
 LiquidCrystal lcd(6, 7, A0, A1, A2, A3);
 unsigned long prevTimeTiltHandled = 0;
 unsigned long prevTimeGpsHandled = 0;
+AverageSpeed averageSpeed;
+Distance distance;

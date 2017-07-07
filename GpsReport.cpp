@@ -13,10 +13,8 @@
 #include "fstream_headers.h"
 #include "Logger.h"
 #include "GpsReport.h"
-
 #include "ElementQueue.h"
-
-#define HDOP_UNRELIABLE 900
+#include "PreCompilerOptions.h"
 
 void GpsReport::readGps()
 {

@@ -15,7 +15,7 @@ class GpsReport
   float speed;
 public:
   void readGps();
-  GpsReport(TinyGPS& g): gps(g), speed(0) {}
+  GpsReport(TinyGPS& g): HDOP(), gps(g), speed(0) {}
   StatusIndicator::Status write(Logger& logger);
   SpeedMessage speedMessage() const;
 };

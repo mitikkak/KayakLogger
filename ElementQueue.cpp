@@ -17,6 +17,7 @@ template class LogElement<unsigned long>;
 template class LogElement<float>;
 template class LogElement<int>;
 template class LogElement<double>;
+template class LogElement<unsigned int>;
 
 template <class TYPE>
 void LogElement<TYPE>::outputValue(ofstream& sdlog) const
