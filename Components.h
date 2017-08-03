@@ -1,5 +1,6 @@
 
 #include "PreCompilerOptions.h"
+#include "PinLayout.h"
 
 #ifdef UNIT_TEST
 #include "FakeSdFat.h"
