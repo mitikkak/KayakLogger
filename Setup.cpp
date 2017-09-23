@@ -2,6 +2,7 @@
 #include "Setup.h"
 #include "Components.h"
 #include "Arduino.h"
+#include "HallSwitch.h"
 
 void setup()
 {
@@ -24,4 +25,7 @@ void setup()
   prevTimeTiltHandled = millis();
   prevTimeGpsHandled = millis();
   lcd.begin(20, 2);
+  // initialize the pushbutton pin as an input:
+  pinMode(HALL_SWITCH, INPUT);
+  //attachInterrupt(0, hallSwitch_ISR, CHANGE);
 }

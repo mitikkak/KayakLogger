@@ -18,7 +18,7 @@ float AverageSpeed::value() const
     }
     return 0;
 }
-StatusIndicator::Status AverageSpeed::write(Logger& logger, float& val) const
+StatusIndicator::Status AverageSpeed::write(Logger& logger) const
 {
     Element* totalElement = new LogElement<float>("AS_TOTAL", total);
     Element* samplesElement = new LogElement<unsigned int>("AS_SAMPLES", samples);

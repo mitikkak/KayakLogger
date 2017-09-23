@@ -15,7 +15,7 @@ D10 - SDCARD
 D11 - SDCARD (SPI)
 D12 - SDCARD (SPI)
 D13 - SDCARD (SPI)
-A0 - NC
+A0 - HALL_SWITCH
 A1 - NC
 A2 - NC
 A3 - NC
@@ -31,4 +31,5 @@ A5 - ADXL (I2C)
 #define LCD_D5 6
 #define LCD_D6 7
 #define LCD_D7 8
+#define HALL_SWITCH A0
 

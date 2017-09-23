@@ -6,10 +6,11 @@
 #include "PreCompilerOptions.h"
 
 static const unsigned int GPS_MEASUREMENT_PERIOD_SECONDS = GPS_MEASUREMENT_PERIOD/1000;
+static const unsigned int METERS_TO_KILOMETERS = 1000;
 
 void Distance::add(const float& speed)
 {
-    v += speed*3.6*(GPS_MEASUREMENT_PERIOD_SECONDS);
+    v += (speed*3.6*(GPS_MEASUREMENT_PERIOD_SECONDS))/METERS_TO_KILOMETERS;
 }
 StatusIndicator::Status Distance::write(Logger& logger) const
 {
