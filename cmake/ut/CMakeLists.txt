@@ -1,10 +1,8 @@
-project(kayak_logger)
+project(ut)
 cmake_minimum_required(VERSION 2.8)
 
 # Locate GTest
-find_package(GTest REQUIRED)
-set(PROJECT_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/..)
-MESSAGE("PROJECT_ROOT: ${PROJECT_ROOT}")
+find_package(GTest REQUIRED GTEST_ROOT=/home/mitikkak/googletest/googletest)
 set(EXTERNALS_DIR ${PROJECT_ROOT}/externals)
 MESSAGE("Externals: ${EXTERNALS_DIR}")
 set(ACCELEROMETER_DIR ${EXTERNALS_DIR}/ADXL345)
