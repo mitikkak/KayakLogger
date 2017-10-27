@@ -58,7 +58,7 @@ set(CMAKE_EXE_LINKER_FLAGS "-Os -Wl,--gc-sections -mmcu=atmega328p")
 
 add_executable(${PROJECT_NAME} ${sources} ${arduino_core_sources})
 
-#/home/mikko/arduino-1.6.12/hardware/tools/avr/bin/avr-objcopy -O ihex -j .eeprom --set-section-flags=.eeprom=alloc,load --no-change-warnings --change-section-lma .eeprom=0  ./kayak_logger ./kayak_logger.eep
-#/home/mikko/arduino-1.6.12/hardware/tools/avr/bin/avr-objcopy -O ihex -R .eeprom  ./kayak_logger ./kayak_logger.hex
-#/home/mikko/arduino-1.6.12/hardware/tools/avr/bin/avrdude -C/home/mikko/arduino-1.6.12/hardware/tools/avr/etc/avrdude.conf -v -patmega328p -carduino -P/dev/ttyACM0 -b115200 -D -Uflash:w:./kayak_logger.hex:i
+add_custom_target(elf_to_hex COMMAND ${ARDUINO_PATH}/hardware/tools/avr/bin/avr-objcopy -O ihex -R .eeprom kayak_logger kayak_logger.hex)
+add_custom_target(upload     COMMAND ${ARDUINO_PATH}/hardware/tools/avr/bin/avrdude -C${ARDUINO_PATH}/hardware/tools/avr/etc/avrdude.conf -v -patmega328p -carduino -P/dev/ttyACM0 -b115200 -Uflash:w:./kayak_logger.hex:i
+                                    DEPENDS elf_to_hex)
 
