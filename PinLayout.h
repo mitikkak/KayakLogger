@@ -25,11 +25,13 @@ A5 - ADXL (I2C)
 
 #define SDFAT_CS 10
 #define STATUS_INDICATOR_LED 9
+#ifndef IIC_LCD
 #define LCD_RS 3
 #define LCD_ENABLE 4
 #define LCD_D4 5
 #define LCD_D5 6
 #define LCD_D6 7
 #define LCD_D7 8
+#endif
 #define HALL_SWITCH A0
 

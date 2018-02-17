@@ -11,7 +11,11 @@ StatusIndicator statusIndicator(STATUS_INDICATOR_LED);
 TinyGPS gps;
 #endif
 #include "Arduino.h"
+#ifdef IIC_LCD
+LiquidCrystal_I2C lcd(IIC_LCD_ADDRESS,20,4);
+#else
 LiquidCrystal lcd(LCD_RS, LCD_ENABLE, LCD_D4, LCD_D5, LCD_D6, LCD_D7);
+#endif
 unsigned long prevTimeTiltHandled = 0;
 unsigned long prevTimeGpsHandled = 0;
 AverageSpeed averageSpeed;

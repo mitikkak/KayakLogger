@@ -23,12 +23,13 @@ bool isActive()
 void loop()
 {
   unsigned long timeNow = millis();
-  
+#ifdef HALL_SWITCH_ON
   if (timeNow > (prevTimeActivityChecked + activityTimeCheckThreshold))
   {
     activity = isActive();
     prevTimeActivityChecked = timeNow;
   }
+
   if (!activity)
   {
      lcd.clear();
@@ -37,6 +38,7 @@ void loop()
      delay(100);
      return;
   }
+#endif
 #ifdef ACCELEROMETER_ON
   if (timeNow - prevTimeTiltHandled > TILT_MEASUREMENT_PERIOD)
   {
