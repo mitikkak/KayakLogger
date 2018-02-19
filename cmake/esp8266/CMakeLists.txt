@@ -26,6 +26,12 @@ set(sources
 #    ${ARDUINO_WIRE_SRC}/utility/twi.c
     ${SDFAT_ESP8266_DIR}
     ${GPS_DIR}/TinyGPS.cpp
+    ${SPI_ESP8266_DIR}/SPI.cpp
+    ${SDFAT_ESP8266_DIR}/File.cpp
+    ${SDFAT_ESP8266_DIR}/SD.cpp
+    ${SDFAT_ESP8266_DIR}/utility/Sd2Card.cpp
+    ${SDFAT_ESP8266_DIR}/utility/SdFile.cpp
+    ${SDFAT_ESP8266_DIR}/utility/SdVolume.cpp
 )
 
 add_executable(${PROJECT_NAME} ${sources})
