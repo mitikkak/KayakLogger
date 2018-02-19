@@ -4,7 +4,14 @@
 #include <fstream>
 using namespace std;
 #else
-#include "SdFat.h"
+ #ifdef ESP8266
+  #include "SD.h"
+ #else
+  #include "SdFat.h"
+ #endif
+#endif
+#ifdef ESP8266
+using namespace std;
 #endif
 #include "Logger.h"
 
@@ -37,6 +44,7 @@ StatusIndicator::Status Logger::myLogEvent(ElementQueue& queue)
   {
     //return StatusIndicator::Status_mkDirFailed;
   }
+#ifndef ESP8266_BUILD_ERRORS
   // create or open a file for append
   ofstream sdlog("LOGS/datalog.txt", ios::out | ios::app);
   bool somethingWasWritten = false;
@@ -69,6 +77,7 @@ StatusIndicator::Status Logger::myLogEvent(ElementQueue& queue)
   {
     return StatusIndicator::Status_sdAppendFailed;
   }
+#endif
   // file will be closed when sdlog goes out of scope
   return StatusIndicator::Status_ok;
 }

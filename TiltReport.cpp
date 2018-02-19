@@ -1,6 +1,9 @@
 #include "PreCompilerOptions.h"
 #include "StatusIndicator.h"
 #include "fstream_headers.h"
+#ifdef ESP8266
+using namespace std;
+#endif
 #include "ElementQueue.h"
 #include "Logger.h"
 #include "ADXL345.h"

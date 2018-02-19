@@ -1,10 +1,12 @@
-
+#ifdef ESP8266
+using namespace std;
+#endif
 #include "Components.h"
 
 #ifdef ACCELEROMETER_ON
 ADXL345 accMeter;
 #endif
-SdFat sdFat;
+SD_TYPE sdFat;
 Logger logger(sdFat, SDFAT_CS);
 StatusIndicator statusIndicator(STATUS_INDICATOR_LED);
 #ifdef GPS_ON

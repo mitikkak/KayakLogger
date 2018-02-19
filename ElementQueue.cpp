@@ -1,5 +1,8 @@
 
 #include "fstream_headers.h"
+#ifdef ESP8266
+using namespace std;
+#endif
 #include "ElementQueue.h"
 
 Element::Element(const char *p_msg): msg(p_msg) {}
@@ -22,7 +25,9 @@ template class LogElement<unsigned int>;
 template <class TYPE>
 void LogElement<TYPE>::outputValue(ofstream& sdlog) const
 {
+#ifndef ESP8266_BUILD_ERRORS
   sdlog << value;
+#endif
 }
 ElementQueue::ElementQueue():
 numOf(0)

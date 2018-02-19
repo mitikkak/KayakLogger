@@ -3,5 +3,9 @@
 #include <fstream>
 using namespace std;
 #else
-#include <SdFat.h>
+ #ifdef ESP8266
+  #include "SD.h"
+ #else
+  #include "SdFat.h"
+ #endif
 #endif

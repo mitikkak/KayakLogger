@@ -1,6 +1,9 @@
 
 #include "Loop.h"
 #include "Arduino.h"
+#ifdef ESP8266
+using namespace std;
+#endif
 #include "Components.h"
 #include "TiltReport.h"
 #include "GpsReport.h"
@@ -61,8 +64,8 @@ void loop()
         averageSpeed.add(msg.value);
         StatusIndicator::Status const averageSpeedStatus = averageSpeed.write(logger);
         statusIndicator.newEvent(averageSpeedStatus, timeNow);
-        distance.add(msg.value);
-        StatusIndicator::Status const distanceStatus = distance.write(logger);
+        distance_.add(msg.value);
+        StatusIndicator::Status const distanceStatus = distance_.write(logger);
         statusIndicator.newEvent(distanceStatus, timeNow);
     }
     lcd.clear();
@@ -77,7 +80,7 @@ void loop()
     lcd.print("|");
     lcd.print(averageSpeed.value(), 3);
     lcd.print("|");
-    lcd.print(distance.value(), 3);
+    lcd.print(distance_.value(), 3);
   }
   else
   {

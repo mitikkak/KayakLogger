@@ -1,5 +1,8 @@
 
 #include "Setup.h"
+#ifdef ESP8266
+using namespace std;
+#endif
 #include "Components.h"
 #include "Arduino.h"
 #include "HallSwitch.h"

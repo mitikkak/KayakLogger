@@ -4,12 +4,17 @@
 
 #include "StatusIndicator.h"
 #include "ElementQueue.h"
-struct SdFat;
+#ifdef ESP8266
+typedef struct SDClass SD_TYPE;
+#else
+typedef struct SdFat SD_TYPE;
+#endif
+
 class Logger
 {
   public:
-  Logger(SdFat& s, int const pin):sd(s), sdCardChipSelect(pin) {}
-  SdFat& sd;
+  Logger(SD_TYPE& s, int const pin):sd(s), sdCardChipSelect(pin) {}
+  SD_TYPE& sd;
   const int sdCardChipSelect;
   void initSdCard();
   virtual StatusIndicator::Status myLogEvent(ElementQueue& queue);

@@ -1,46 +1,15 @@
 
-project(kayak_logger)
+project(kayak_logger_atmega328)
 
-message(ARDUINO_PATH: ${ARDUINO_PATH})
-if(${ARDUINO_PATH} MATCHES .*arduino.*)
-   message("arduino path found at:" ${ARDUINO_PATH})
-else()
-   message("setting arduino path from env variable ...")
-   set(ARDUINO_PATH $ENV{ARDUINO_PATH} CACHE STRING "")
-endif()
-if(${ARDUINO_PATH} MATCHES .*arduino.*)
-   message("arduino path found at:" ${ARDUINO_PATH})
-else()
-   message(FATAL_ERROR "ARDUINO_PATH environment variable missing! It should point to root of arduino installation, for example /home/your_name/arduino-1.6.12/")
-endif()
+include(${ARDUINO_CMAKE_DIR}/atmega328/paths.cmake)
+include(${ARDUINO_CMAKE_DIR}/atmega328/tools.cmake)
+include(${ARDUINO_CMAKE_DIR}/atmega328/defs.cmake)
+include(${ARDUINO_CMAKE_DIR}/atmega328/core.cmake)
+include(${ARDUINO_CMAKE_DIR}/atmega328/deploy.cmake)
 
-set(AVR_COMPILER_DIR ${ARDUINO_PATH}/hardware/tools/avr/bin)
-set(CMAKE_C_COMPILER ${AVR_COMPILER_DIR}/avr-gcc)
-set(CMAKE_CXX_COMPILER ${AVR_COMPILER_DIR}/avr-g++)
-set(ARDUINO_CORE_SRC ${ARDUINO_PATH}/hardware/arduino/avr/cores/arduino)
-set(ARDUINO_LCD_SRC ${ARDUINO_PATH}/libraries/LiquidCrystal/src/)
-set(IIC_LCD_SRC ${PROJECT_ROOT}/externals/LiquidCrystal_I2C)
-set(ARDUINO_WIRE_SRC ${ARDUINO_PATH}/hardware/arduino/avr/libraries/Wire/src/)
 set(ARDUINO_PINS ${ARDUINO_PATH}/hardware/arduino/avr/variants/standard)
-set(SRC_DIR ${PROJECT_ROOT})
-set(EXTERNALS_DIR ${PROJECT_ROOT}/externals)
-set(GPS_DIR ${PROJECT_ROOT}/externals/TinyGPS)
-set(SDFAT_DIR ${PROJECT_ROOT}/externals/SdFat)
-set(ACCELEROMETER_DIR ${PROJECT_ROOT}/externals/ADXL345/)
-
-# Find Arduino SDK delivered programs
-find_program(AR_AVR_GCC NAMES avr-gcc PATHS ${ARDUINO_PATH}/hardware/tools/avr/bin NO_DEFAULT_PATH)
-find_program(AR_AVR_CXX NAMES avr-g++ PATHS ${ARDUINO_PATH}/hardware/tools/avr/bin NO_DEFAULT_PATH)
-find_program(AR_AVR_OBJCOPY NAMES avr-objcopy PATHS ${ARDUINO_PATH}/hardware/tools/avr/bin NO_DEFAULT_PATH)
-find_program(AR_AVR_OBJDUMP NAMES avr-objdump PATHS ${ARDUINO_PATH}/hardware/tools/avr/bin NO_DEFAULT_PATH)
-find_program(AR_AVR_RANLIB NAMES avr-ranlib PATHS ${ARDUINO_PATH}/hardware/tools/avr/bin NO_DEFAULT_PATH)
-find_program(AR_AVR_LD NAMES avr-ld PATHS ${ARDUINO_PATH}/hardware/tools/avr/bin NO_DEFAULT_PATH)
-
-INCLUDE_DIRECTORIES(${ARDUINO_CORE_SRC} ${ARDUINO_PINS} ${SRC_DIR} ${GPS_DIR} ${SDFAT_DIR} ${ARDUINO_LCD_SRC} ${IIC_LCD_SRC} ${ACCELEROMETER_DIR} ${ARDUINO_WIRE_SRC})
-
-add_definitions(-c -g -Os -w -std=gnu++11 -fpermissive -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -MMD -flto -mmcu=atmega328p -DF_CPU=16000000L -DARDUINO=10800 -DARDUINO_AVR_UNO -DARDUINO_ARCH_AVR)
-add_definitions(-DIIC_LCD)
-add_definitions(-DHALL_SWITCH_ON)
+set(ARDUINO_LCD_SRC ${ARDUINO_PATH}/libraries/LiquidCrystal/src/)
+set(ARDUINO_WIRE_SRC ${ARDUINO_PATH}/hardware/arduino/avr/libraries/Wire/src/)
 
 set(sources
     ${SRC_DIR}/Loop.cpp
@@ -68,24 +37,23 @@ set(sources
     ${GPS_DIR}/TinyGPS.cpp
 )
 
-set(arduino_core_sources ${ARDUINO_CORE_SRC}/CDC.cpp ${ARDUINO_CORE_SRC}/HardwareSerial.cpp ${ARDUINO_CORE_SRC}/HardwareSerial0.cpp ${ARDUINO_CORE_SRC}/HardwareSerial1.cpp ${ARDUINO_CORE_SRC}/HardwareSerial2.cpp ${ARDUINO_CORE_SRC}/HardwareSerial3.cpp ${ARDUINO_CORE_SRC}/IPAddress.cpp ${ARDUINO_CORE_SRC}/PluggableUSB.cpp ${ARDUINO_CORE_SRC}/Print.cpp ${ARDUINO_CORE_SRC}/Stream.cpp ${ARDUINO_CORE_SRC}/Tone.cpp ${ARDUINO_CORE_SRC}/USBCore.cpp ${ARDUINO_CORE_SRC}/WInterrupts.c ${ARDUINO_CORE_SRC}/WMath.cpp ${ARDUINO_CORE_SRC}/WString.cpp ${ARDUINO_CORE_SRC}/abi.cpp ${ARDUINO_CORE_SRC}/hooks.c ${ARDUINO_CORE_SRC}/main.cpp ${ARDUINO_CORE_SRC}/new.cpp ${ARDUINO_CORE_SRC}/wiring.c ${ARDUINO_CORE_SRC}/wiring_analog.c ${ARDUINO_CORE_SRC}/wiring_digital.c ${ARDUINO_CORE_SRC}/wiring_pulse.c ${ARDUINO_CORE_SRC}/wiring_shift.c)
+add_executable(${PROJECT_NAME} ${sources} ${atmega328_core_sources})
+target_link_libraries(${PROJECT_NAME} ${atmega328_linker_options})
+target_compile_options(
+    ${PROJECT_NAME} PRIVATE
+    ${atmega328_compiler_set_cpp}
+)
+target_include_directories(
+    ${PROJECT_NAME} PRIVATE
+    ${ATMEGA328_CORE_SRC} 
+    ${ARDUINO_PINS}
+    ${SRC_DIR}
+    ${GPS_DIR}
+    ${SDFAT_DIR}
+    ${ARDUINO_LCD_SRC}
+    ${IIC_LCD_SRC}
+    ${ACCELEROMETER_DIR}
+    ${ARDUINO_WIRE_SRC}
+)
 
-# Compiler suite specification
-set(CMAKE_C_COMPILER ${AR_AVR_GCC})
-set(CMAKE_CXX_COMPILER ${AR_AVR_CXX})
-set(CMAKE_OBJCOPY ${AR_AVR_OBJCOPY})
-set(CMAKE_OBJDUMP ${AR_AVR_OBJDUMP})
-set(CMAKE_RANLIB ${AR_AVR_RANLIB})
-set(CMAKE_LINKER ${AR_AVR_LD})
-
-# Linker flags
-set(CMAKE_SHARED_LIBRARY_LINK_C_FLAGS "")   # remove -rdynamic for C
-set(CMAKE_SHARED_LIBRARY_LINK_CXX_FLAGS "") # remove -rdynamic for CXX
-set(CMAKE_EXE_LINKER_FLAGS "-Os -Wl,--gc-sections -mmcu=atmega328p")
-
-add_executable(${PROJECT_NAME} ${sources} ${arduino_core_sources})
-
-add_custom_target(elf_to_hex COMMAND ${ARDUINO_PATH}/hardware/tools/avr/bin/avr-objcopy -O ihex -R .eeprom kayak_logger kayak_logger.hex)
-add_custom_target(upload     COMMAND ${ARDUINO_PATH}/hardware/tools/avr/bin/avrdude -C${ARDUINO_PATH}/hardware/tools/avr/etc/avrdude.conf -v -patmega328p -carduino -P/dev/ttyACM0 -b115200 -Uflash:w:./kayak_logger.hex:i
-                                    DEPENDS elf_to_hex)
-
+upload_atmega328(${PROJECT_NAME} ${PROJECT_NAME})

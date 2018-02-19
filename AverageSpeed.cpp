@@ -1,6 +1,9 @@
 
 #include "StatusIndicator.h"
 #include "fstream_headers.h"
+#ifdef ESP8266
+using namespace std;
+#endif
 #include "Logger.h"
 #include "AverageSpeed.h"
 #include "PreCompilerOptions.h"
