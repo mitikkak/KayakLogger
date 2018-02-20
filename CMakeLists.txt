@@ -7,6 +7,9 @@ set(ARDUINO_CMAKE_DIR ${PROJECT_ROOT}/arduino_cmake)
 
 add_definitions(-DIIC_LCD)
 add_definitions(-DHALL_SWITCH_ON)
+add_definitions(-DGPS_ON)
+add_definitions(-DACCELEROMETER_ON)
+#add_definitions(-DRUNTIME_SERIAL_ON)
 
 set(SRC_DIR ${PROJECT_ROOT})
 set(IIC_LCD_SRC ${PROJECT_ROOT}/externals/LiquidCrystal_I2C)

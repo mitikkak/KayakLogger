@@ -20,10 +20,7 @@ set(sources
     ${SRC_DIR}/Components.cpp
     ${SRC_DIR}/TiltReport.cpp
     ${ACCELEROMETER_DIR}/ADXL345.cpp
-#    ${ARDUINO_LCD_SRC}/LiquidCrystal.cpp
     ${IIC_LCD_SRC}/LiquidCrystal_I2C.cpp
-#    ${ARDUINO_WIRE_SRC}/Wire.cpp
-#    ${ARDUINO_WIRE_SRC}/utility/twi.c
     ${SDFAT_ESP8266_DIR}
     ${GPS_DIR}/TinyGPS.cpp
     ${SPI_ESP8266_DIR}/SPI.cpp
@@ -32,10 +29,11 @@ set(sources
     ${SDFAT_ESP8266_DIR}/utility/Sd2Card.cpp
     ${SDFAT_ESP8266_DIR}/utility/SdFile.cpp
     ${SDFAT_ESP8266_DIR}/utility/SdVolume.cpp
+    ${WIRE_ESP8266_DIR}/Wire.cpp
 )
 
 add_executable(${PROJECT_NAME} ${sources})
-target_link_libraries(${PROJECT_NAME} esp8266_core)
+target_link_libraries(${PROJECT_NAME} PUBLIC esp8266_core PRIVATE ${esp8266_linker_options})
 target_compile_options(
     ${PROJECT_NAME} PRIVATE
     ${compiler_set_2}
