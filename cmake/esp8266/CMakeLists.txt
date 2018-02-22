@@ -33,10 +33,11 @@ set(sources
 )
 
 add_executable(${PROJECT_NAME} ${sources})
-target_link_libraries(${PROJECT_NAME} PUBLIC esp8266_core PRIVATE ${esp8266_linker_options})
+target_link_libraries(${PROJECT_NAME} PRIVATE ${esp8266_linker_options})
+add_dependencies(${PROJECT_NAME} ${esp8266_core_libs})
 target_compile_options(
     ${PROJECT_NAME} PRIVATE
-    ${compiler_set_2}
+    ${compiler_set_cpp}
     -DESP8266_BUILD_ERRORS
 )
 
