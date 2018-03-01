@@ -8,7 +8,8 @@ class StatusIndicator
   {
   Status_ok = 0,
   Status_sdAppendFailed = 1,
-  Status_hdopUnreliable = 2
+  Status_hdopUnreliable = 2,
+  Status_mkDirFailed = 3
   };
 
   StatusIndicator(const int p);

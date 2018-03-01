@@ -37,16 +37,58 @@ Serial.println("card initialized.");
 digitalWrite(sdCardChipSelect, HIGH);
 }
 
+static const char* const fileName = "LOGS/datalog.txt";
+#ifdef ESP8266
+#include <fstream>
+StatusIndicator::Status Logger::myLogEvent(ElementQueue& queue)
+{
+    // create dir if needed
+    if (!sd.mkdir("LOGS/"))
+    {
+      return StatusIndicator::Status_mkDirFailed;
+    }
+    String dataString = "";
+    bool somethingWasWritten = false;
+#if 0
+    while (queue.peek())
+    {
+      Element* element = queue.pop();
+      if (element)
+      {
+        somethingWasWritten = true;
+        dataString += element->msg += ": ";
+        element->outputValue(dataString);
+        sdlog << " ; ";
+        delete element;
+      }
+    }
+
+    if (somethingWasWritten)
+    {
+      sdlog << endl;
+    }
+#endif
+    File dataFile = SD.open(fileName, FILE_WRITE);
+
+    // if the file is available, write to it:
+    if (!dataFile) {
+        return StatusIndicator::Status_sdAppendFailed;
+    }
+    dataFile.println(dataString);
+    dataFile.close();
+
+  return StatusIndicator::Status_ok;
+}
+#else
 StatusIndicator::Status Logger::myLogEvent(ElementQueue& queue)
 {
   // create dir if needed
   if (!sd.mkdir("LOGS/"))
   {
-    //return StatusIndicator::Status_mkDirFailed;
+    return StatusIndicator::Status_mkDirFailed;
   }
-#ifndef ESP8266_BUILD_ERRORS
   // create or open a file for append
-  ofstream sdlog("LOGS/datalog.txt", ios::out | ios::app);
+  ofstream sdlog(fileName, ios::out | ios::app);
   bool somethingWasWritten = false;
 
   sdlog.precision(6);
@@ -77,7 +119,7 @@ StatusIndicator::Status Logger::myLogEvent(ElementQueue& queue)
   {
     return StatusIndicator::Status_sdAppendFailed;
   }
-#endif
   // file will be closed when sdlog goes out of scope
   return StatusIndicator::Status_ok;
 }
+#endif

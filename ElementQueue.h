@@ -15,6 +15,7 @@ struct LogElement : public Element
 {
   explicit LogElement(const char *p_msg, TYPE const val);
   void outputValue(ofstream& sdlog) const;
+  void outputValue(String& str) const;
   TYPE const value;
 };
 

@@ -25,7 +25,7 @@ template class LogElement<unsigned int>;
 template <class TYPE>
 void LogElement<TYPE>::outputValue(ofstream& sdlog) const
 {
-#ifndef ESP8266_BUILD_ERRORS
+#ifndef ESP8266_BUILD_ERROR_1
   sdlog << value;
 #endif
 }
