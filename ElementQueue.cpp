@@ -22,13 +22,19 @@ template class LogElement<int>;
 template class LogElement<double>;
 template class LogElement<unsigned int>;
 
+#ifndef ESP8266
 template <class TYPE>
 void LogElement<TYPE>::outputValue(ofstream& sdlog) const
 {
-#ifndef ESP8266_BUILD_ERROR_1
   sdlog << value;
-#endif
 }
+#else
+template <class TYPE>
+void LogElement<TYPE>::outputValue(String& str) const
+{
+    str += value;
+}
+#endif
 ElementQueue::ElementQueue():
 numOf(0)
 { for (int i = 0; i < maximum; i++) {elems[i] = 0;} }

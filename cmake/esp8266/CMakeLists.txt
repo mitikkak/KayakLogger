@@ -38,7 +38,6 @@ add_dependencies(${PROJECT_NAME} ${esp8266_core_libs})
 target_compile_options(
     ${PROJECT_NAME} PRIVATE
     ${compiler_set_cpp}
-    -DESP8266_BUILD_ERROR_1
 )
 
 target_include_directories(

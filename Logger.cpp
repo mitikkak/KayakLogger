@@ -49,25 +49,26 @@ StatusIndicator::Status Logger::myLogEvent(ElementQueue& queue)
     }
     String dataString = "";
     bool somethingWasWritten = false;
-#if 0
     while (queue.peek())
     {
       Element* element = queue.pop();
       if (element)
       {
         somethingWasWritten = true;
-        dataString += element->msg += ": ";
+        dataString += element->msg;
+        dataString += ": ";
+        #if 1
         element->outputValue(dataString);
-        sdlog << " ; ";
+        #endif
+        dataString += " ; ";
         delete element;
       }
     }
 
     if (somethingWasWritten)
     {
-      sdlog << endl;
+      dataString += "\n";
     }
-#endif
     File dataFile = SD.open(fileName, FILE_WRITE);
 
     // if the file is available, write to it:
