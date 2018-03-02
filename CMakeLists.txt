@@ -9,6 +9,7 @@ add_definitions(-DIIC_LCD)
 add_definitions(-DHALL_SWITCH_ON)
 add_definitions(-DGPS_ON)
 add_definitions(-DACCELEROMETER_ON)
+#add_definitions(-DSTATUS_INDICATOR_ON)
 #add_definitions(-DRUNTIME_SERIAL_ON)
 
 set(SRC_DIR ${PROJECT_ROOT})

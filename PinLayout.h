@@ -1,3 +1,20 @@
+
+#ifdef ESP8266
+/*
+ESP8266:
+RX- GPS
+TX-GPS
+
+
+*/
+#define SDFAT_CS 4
+#define STATUS_INDICATOR_LED 0xFF
+#define HALL_SWITCH A0
+#ifndef IIC_LCD
+#error "Only IIC LCD supported on ESP8266"
+#endif
+
+#else
 /*
 ATMEGA328:
 
@@ -34,4 +51,5 @@ A5 - ADXL (I2C)
 #define LCD_D7 8
 #endif
 #define HALL_SWITCH A0
+#endif
 

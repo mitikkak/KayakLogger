@@ -8,7 +8,9 @@ ADXL345 accMeter;
 #endif
 SD_TYPE sdFat;
 Logger logger(sdFat, SDFAT_CS);
+#ifdef STATUS_INDICATOR_ON
 StatusIndicator statusIndicator(STATUS_INDICATOR_LED);
+#endif
 #ifdef GPS_ON
 TinyGPS gps;
 #endif

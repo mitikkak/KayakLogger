@@ -24,7 +24,9 @@ void setup()
 #ifdef ACCELEROMETER_ON
   accMeter.setRange(ADXL345::RANGE_4G);
 #endif
+#ifdef STATUS_INDICATOR_ON
   statusIndicator.init();
+#endif
   prevTimeTiltHandled = millis();
   prevTimeGpsHandled = millis();
   lcd.begin(20, 2);
