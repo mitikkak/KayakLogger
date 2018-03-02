@@ -47,9 +47,7 @@ void loop()
   {
     TiltReport tiltReport(accMeter);
     StatusIndicator::Status const reportStatus = tiltReport.write(logger);
-#ifdef STATUS_INDICATOR_ON
     statusIndicator.newEvent(reportStatus, timeNow);
-#endif
     prevTimeTiltHandled = timeNow;
   }
 #endif
@@ -58,23 +56,17 @@ void loop()
   if (timeNow - prevTimeGpsHandled > GPS_MEASUREMENT_PERIOD)
   {
     StatusIndicator::Status const reportStatus = gpsReport.write(logger);
-#ifdef STATUS_INDICATOR_ON
     statusIndicator.newEvent(reportStatus, timeNow);
-#endif
     prevTimeGpsHandled = timeNow;
     SpeedMessage msg = gpsReport.speedMessage();
     if (gpsReport.HDOP < HDOP_UNRELIABLE)
     {
         averageSpeed.add(msg.value);
         StatusIndicator::Status const averageSpeedStatus = averageSpeed.write(logger);
-#ifdef STATUS_INDICATOR_ON
         statusIndicator.newEvent(averageSpeedStatus, timeNow);
-#endif
         distance_.add(msg.value);
         StatusIndicator::Status const distanceStatus = distance_.write(logger);
-#ifdef STATUS_INDICATOR_ON
         statusIndicator.newEvent(distanceStatus, timeNow);
-#endif
     }
     lcd.clear();
     lcd.setCursor(0, 0);
@@ -95,7 +87,5 @@ void loop()
       gpsReport.readGps();
   }
 #endif
-#ifdef STATUS_INDICATOR_ON
   statusIndicator.continueCurrentState(timeNow);
-#endif
 }

@@ -36,9 +36,7 @@ typedef struct SdFat SD_TYPE;
 #endif
 extern SD_TYPE sdFat;
 extern Logger logger;
-#ifdef STATUS_INDICATOR_ON
 extern StatusIndicator statusIndicator;
-#endif
 #ifdef GPS_ON
  #ifdef UNIT_TEST
   #include "FakeSoftwareSerial.h"

@@ -7,7 +7,9 @@ StatusIndicator::StatusIndicator(const int p): pin(p), currentState(Status_ok),
 
 void StatusIndicator::init()
 {
+#ifdef STATUS_INDICATOR_ON
   pinMode(pin, OUTPUT);
+#endif
   startNextState(Status_ok, millis());
 }
 void StatusIndicator::newEvent(Status const st, int const milliSecs)
@@ -48,6 +50,8 @@ void StatusIndicator::nextPeriod(const int milliSecs)
 {
   const int nextLedState = currentSchedule & 0x1;
 //    Serial.print("sch:");Serial.print(currentSchedule);Serial.print(",nextLedState:"); Serial.print(nextLedState); Serial.print(", at:");Serial.println(milliSecs);
+#ifdef STATUS_INDICATOR_ON
   digitalWrite(pin, nextLedState);
+#endif
   periodStartedAt = milliSecs;
 }
