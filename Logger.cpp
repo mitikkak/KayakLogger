@@ -42,11 +42,6 @@ static const char* const fileName = "LOGS/datalog.txt";
 #include <fstream>
 StatusIndicator::Status Logger::myLogEvent(ElementQueue& queue)
 {
-    // create dir if needed
-    if (!sd.mkdir("LOGS/"))
-    {
-      return StatusIndicator::Status_mkDirFailed;
-    }
     String dataString = "";
     bool somethingWasWritten = false;
     while (queue.peek())
@@ -69,6 +64,11 @@ StatusIndicator::Status Logger::myLogEvent(ElementQueue& queue)
     {
       dataString += "\n";
     }
+    // create dir if needed
+    if (!sd.mkdir("LOGS/"))
+    {
+      return StatusIndicator::Status_mkDirFailed;
+    }
     File dataFile = SD.open(fileName, FILE_WRITE);
 
     // if the file is available, write to it:
@@ -86,7 +86,8 @@ StatusIndicator::Status Logger::myLogEvent(ElementQueue& queue)
   // create dir if needed
   if (!sd.mkdir("LOGS/"))
   {
-    return StatusIndicator::Status_mkDirFailed;
+      // TODO: returning here causes memory leak of queue elements
+ //      return StatusIndicator::Status_mkDirFailed;
   }
   // create or open a file for append
   ofstream sdlog(fileName, ios::out | ios::app);
@@ -97,8 +98,6 @@ StatusIndicator::Status Logger::myLogEvent(ElementQueue& queue)
 
   while (queue.peek())
   {
-
-
     Element* element = queue.pop();
     if (element)
     {
