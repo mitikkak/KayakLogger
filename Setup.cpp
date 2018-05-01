@@ -27,7 +27,17 @@ void setup()
   statusIndicator.init();
   prevTimeTiltHandled = millis();
   prevTimeGpsHandled = millis();
+#ifdef IIC_LCD
+  lcd.init();
+  lcd.backlight();
+  lcd.setCursor(0,0);
+  lcd.print("Kayaklogger");
+  delay(3000);
+  lcd.clear();
+  lcd.setCursor(0,0);
+#else
   lcd.begin(20, 2);
+#endif
   // initialize the pushbutton pin as an input:
   pinMode(HALL_SWITCH, INPUT);
   //attachInterrupt(0, hallSwitch_ISR, CHANGE);
