@@ -7,7 +7,7 @@ TX-GPS
 
 
 */
-#define SDFAT_CS 4
+#define SDFAT_CS 2
 #define STATUS_INDICATOR_LED 0xFF
 #define HALL_SWITCH A0
 #ifndef IIC_LCD

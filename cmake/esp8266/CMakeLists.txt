@@ -16,7 +16,7 @@ set(sources
     ${SRC_DIR}/Distance.cpp
     ${SRC_DIR}/LogElement.cpp
     ${SRC_DIR}/StatusIndicator.cpp
-    ${SRC_DIR}/Logger.cpp
+    ${SRC_DIR}/Logger_esp8266.cpp
     ${SRC_DIR}/Components.cpp
     ${SRC_DIR}/TiltReport.cpp
     ${ACCELEROMETER_DIR}/ADXL345.cpp

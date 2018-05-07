@@ -14,8 +14,9 @@ using namespace std;
 using namespace std;
 #endif
 #include "Logger.h"
+#include "LiquidCrystal_I2C.h"
 
-void Logger::initSdCard()
+void Logger::initSdCard(LiquidCrystal_I2C& lcd)
 {
 #ifdef RUNTIME_SERIAL_ON
 Serial.print("Initializing SD card...");
@@ -25,9 +26,7 @@ pinMode(sdCardChipSelect, OUTPUT);
 digitalWrite(sdCardChipSelect, HIGH);
 
 if (!sd.begin(sdCardChipSelect)) {
-#ifdef RUNTIME_SERIAL_ON
-  Serial.println("Card failed, or not present");
-#endif
+  lcd.println("Card failed, or not present");
   // don't do anything more:
   return;
 }

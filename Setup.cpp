@@ -19,8 +19,6 @@ void setup()
   #ifdef GPS_ON
   Serial.begin(9600);
   #endif
-  logger.initSdCard();
-  delay(100);
 #ifdef ACCELEROMETER_ON
   accMeter.setRange(ADXL345::RANGE_4G);
 #endif
@@ -38,6 +36,8 @@ void setup()
 #else
   lcd.begin(20, 2);
 #endif
+  logger.initSdCard(lcd);
+  delay(100);
   // initialize the pushbutton pin as an input:
   pinMode(HALL_SWITCH, INPUT);
   //attachInterrupt(0, hallSwitch_ISR, CHANGE);
