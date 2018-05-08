@@ -27,6 +27,7 @@ digitalWrite(sdCardChipSelect, HIGH);
 
 if (!sd.begin(sdCardChipSelect)) {
   lcd.println("Card failed, or not present");
+  delay(5000);
   // don't do anything more:
   return;
 }
@@ -38,7 +39,6 @@ digitalWrite(sdCardChipSelect, HIGH);
 
 static const char* const fileName = "LOGS/datalog.txt";
 #ifdef ESP8266
-#include <fstream>
 StatusIndicator::Status Logger::myLogEvent(ElementQueue& queue)
 {
     String dataString = "";
@@ -68,7 +68,7 @@ StatusIndicator::Status Logger::myLogEvent(ElementQueue& queue)
     {
       return StatusIndicator::Status_mkDirFailed;
     }
-    File dataFile = SD.open(fileName, FILE_WRITE);
+    File dataFile = sd.open(fileName, FILE_WRITE);
 
     // if the file is available, write to it:
     if (!dataFile) {
