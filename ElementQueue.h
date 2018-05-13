@@ -1,6 +1,7 @@
 
 #ifndef _ELEMENT_QUEUE_H
 #define _ELEMENT_QUEUE_H
+#include "fstream_headers.h"
 
 struct Element
 {

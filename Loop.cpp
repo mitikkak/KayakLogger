@@ -12,12 +12,13 @@ int hallSwitchState = 0;
 bool activity = false;
 int loggingOn = 0;
 unsigned long prevTimeActivityChecked = 0;
-const unsigned long activityTimeCheckThreshold = 3000;
+const unsigned long activityTimeCheckThreshold = 2000;
 bool isActive()
 {
    hallSwitchState = analogRead(HALL_SWITCH);
-   const int activityThreshold = 300;
-   if (hallSwitchState < activityThreshold)
+   const int activityLowThreshold = 750;
+   const int activityHighThreshold = 850;
+   if ((hallSwitchState < activityLowThreshold) || (hallSwitchState > activityHighThreshold) )
    {
       return activity ? false : true;
    }
@@ -71,8 +72,6 @@ void loop()
     lcd.clear();
     lcd.setCursor(0, 0);
     lcd.print(gpsReport.HDOP);
-    //lcd.print("|");
-    //lcd.print(hallSwitchActive);
     lcd.print("|");
     lcd.print(loggingOn);
     lcd.setCursor(0, 1);
@@ -81,6 +80,8 @@ void loop()
     lcd.print(averageSpeed.value(), 3);
     lcd.print("|");
     lcd.print(distance_.value(), 3);
+    lcd.setCursor(0, 2);
+    lcd.print(hallSwitchState);
   }
   else
   {
