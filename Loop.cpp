@@ -81,6 +81,12 @@ void loop()
     lcd.print("|");
     lcd.print(distance_.value(), 3);
     lcd.setCursor(0, 2);
+    lcd.print(gpsReport.hour());
+    lcd.print(":");
+    lcd.print(gpsReport.minute());
+    lcd.print(":");
+    lcd.print(gpsReport.second());
+    lcd.print("|");
     lcd.print(hallSwitchState);
   }
   else
