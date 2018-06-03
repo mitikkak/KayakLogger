@@ -1,7 +1,6 @@
 #include <Arduino.h>
 #ifdef UNIT_TEST
 #include "FakeSdFat.h"
-#include <fstream>
 using namespace std;
 #else
  #ifdef ESP8266
@@ -36,8 +35,26 @@ Serial.println("card initialized.");
 #endif
 digitalWrite(sdCardChipSelect, HIGH);
 }
+Logger::FileStatus Logger::reserveFile(unsigned int logNumber)
+{
+  FileStatus retValue = FileStatus::ok;
+  char candidate[MAX_SIZE]{};
+  strcat(candidate, prefix);
+  char itoa_buffer[5]{};
+  const char* const number_cstr = itoa(logNumber, itoa_buffer, DEC);
+  strcat(candidate, number_cstr);
+  strcat(candidate, postfix);
+  if (sd.exists(candidate))
+  {
+    retValue = FileStatus::alreadyTaken;
+  }
+  else
+  {
+    strcat(fileName, candidate);
+  }
+  return retValue;
+}
 
-static const char* const fileName = "LOGS/datalog.txt";
 #ifdef ESP8266
 StatusIndicator::Status Logger::myLogEvent(ElementQueue& queue)
 {

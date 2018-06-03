@@ -10,16 +10,20 @@ public:
 
     SdFat sd;
     const int pin;
-    TestLogger():sd(), pin(9) {}
+    Logger* logger;
+    TestLogger():sd(), pin(9), logger(nullptr) {}
     void SetUp() {
+      logger = new Logger(sd, pin);
     }
 
     void TearDown() {
-
+	delete logger;
     }
 };
 
-TEST_F(TestLogger, construct)
+TEST_F(TestLogger, reserveFile)
 {
-    Logger l(sd, pin);
+  sd.add("LOGS/DATALOG_1.TXT");
+  EXPECT_EQ(Logger::FileStatus::alreadyTaken, logger->reserveFile(1));
+  EXPECT_EQ(Logger::FileStatus::ok, logger->reserveFile(2));
 }

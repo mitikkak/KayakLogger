@@ -14,18 +14,28 @@ include_directories(${GTEST_INCLUDE_DIRS})
 include_directories(${KAYAK_LOGGER_SRC_DIR})
 include_directories(${ACCELEROMETER_DIR})
 include_directories(${STUBS_DIR})
-
-add_definitions(-DUNIT_TEST)
+include_directories(${IIC_LCD_SRC})
 
 set( CMAKE_BUILD_TYPE Debug)
 set(TEST_SRC ${TEST_SRC_DIR}/TestDistance.cpp
+             ${TEST_SRC_DIR}/TestLogger.cpp
              ${TEST_SRC_DIR}/test_main.cpp
 )
-#aux_source_directory(${ACCELEROMETER_DIR} ACCELEROMETER_SRC)
-#aux_source_directory(${STUBS_DIR} STUBS_SRC)
-#aux_source_directory(${KAYAK_LOGGER_SRC_DIR} KAYAK_LOGGER_SRC)
 set(KAYAK_LOGGER_SRC ${KAYAK_LOGGER_SRC_DIR}/Distance.cpp
         ${KAYAK_LOGGER_SRC_DIR}/ElementQueue.cpp
+        ${KAYAK_LOGGER_SRC_DIR}/Logger.cpp
+        ${STUBS_DIR}/FakeSdFat.cpp
+        ${STUBS_DIR}/Arduino.cpp
 )
 add_executable(${PROJECT_NAME} ${TEST_SRC} ${ACCELEROMETER_SRC} ${STUBS_SRC} ${KAYAK_LOGGER_SRC})
 target_link_libraries(${PROJECT_NAME} ${GTEST_LIBRARIES} pthread)
+target_compile_options(
+    ${PROJECT_NAME} PRIVATE
+    -std=gnu++11
+)
+target_compile_definitions(
+    ${PROJECT_NAME} PRIVATE
+    UNIT_TEST
+    ARDUINO=10800
+)
+

@@ -38,7 +38,20 @@ void setup()
 #endif
   logger.initSdCard(lcd);
   delay(100);
+  for (unsigned int i = 0; i < Logger::MAX_FILE_AMOUNT; i++)
+  {
+     Logger::FileStatus const status = logger.reserveFile(i);
+     if (status == Logger::FileStatus::ok)
+     {
+        lcd.print("File: ");
+        lcd.print(logger.filename());
+        delay(3000);
+        break;
+     }
+  }
   // initialize the pushbutton pin as an input:
   pinMode(HALL_SWITCH, INPUT);
   //attachInterrupt(0, hallSwitch_ISR, CHANGE);
+  lcd.clear();
+  lcd.setCursor(0,0);
 }
