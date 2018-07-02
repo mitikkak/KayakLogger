@@ -9,20 +9,44 @@ using namespace std;
 #include "GpsReport.h"
 
 int hallSwitchState = 0;
-bool activity = false;
+typedef enum
+{
+    active = 0,
+    inActive = 1,
+    goingActive = 2
+} Activity;
+Activity activity = inActive;
 int loggingOn = 0;
 unsigned long prevTimeActivityChecked = 0;
 const unsigned long activityTimeCheckThreshold = 2000;
-bool isActive()
+unsigned long timeUntilActivation = 0;
+const unsigned long activationDelay = 5000;
+
+
+Activity isActive(const unsigned long timeNow)
 {
    hallSwitchState = analogRead(HALL_SWITCH);
    const int activityLowThreshold = 750;
    const int activityHighThreshold = 850;
+   Activity retValue = activity;
    if ((hallSwitchState < activityLowThreshold) || (hallSwitchState > activityHighThreshold) )
    {
-      return activity ? false : true;
+       if (retValue == active)
+       {
+           retValue = inActive;
+       }
+       else if (retValue == inActive)
+       {
+           retValue = goingActive;
+           timeUntilActivation = timeNow + activationDelay;
+
+       }
    }
-   return activity;
+   if (retValue == goingActive && timeNow > timeUntilActivation)
+   {
+       retValue = active;
+   }
+   return retValue;
 }
 void loop()
 {
@@ -30,17 +54,26 @@ void loop()
 #ifdef HALL_SWITCH_ON
   if (timeNow > (prevTimeActivityChecked + activityTimeCheckThreshold))
   {
-    activity = isActive();
+    activity = isActive(timeNow);
     prevTimeActivityChecked = timeNow;
   }
 
-  if (!activity)
+  if (activity == inActive)
   {
      lcd.clear();
      lcd.setCursor(0, 0);
      lcd.print(hallSwitchState);
      delay(100);
      return;
+  }
+  if (activity == goingActive)
+  {
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("Going active in: ");
+      lcd.print(timeUntilActivation);
+      delay(100);
+      return;
   }
 #endif
 #ifdef ACCELEROMETER_ON
