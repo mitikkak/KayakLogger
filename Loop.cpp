@@ -20,7 +20,7 @@ int loggingOn = 0;
 unsigned long prevTimeActivityChecked = 0;
 const unsigned long activityTimeCheckThreshold = 2000;
 unsigned long timeUntilActivation = 0;
-const unsigned long activationDelay = 5000;
+const unsigned long activationDelay = 180000;
 
 
 Activity isActive(const unsigned long timeNow)
@@ -71,7 +71,7 @@ void loop()
       lcd.clear();
       lcd.setCursor(0, 0);
       lcd.print("Going active in: ");
-      lcd.print(timeUntilActivation);
+      lcd.print((timeUntilActivation-timeNow));
       delay(100);
       return;
   }
