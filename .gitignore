@@ -3,3 +3,6 @@ unit_tests/CMakeLists.txt.user
 build*
 
 .csettings
+.cproject
+.project
+
