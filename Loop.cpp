@@ -19,7 +19,7 @@ Activity activity = inActive;
 int loggingOn = 0;
 unsigned long prevTimeActivityChecked = 0;
 const unsigned long activityTimeCheckThreshold = 2000;
-unsigned long timeUntilActivation = 0;
+unsigned long activationTime = 0;
 const unsigned long activationDelay = 180000;
 
 
@@ -38,11 +38,11 @@ Activity isActive(const unsigned long timeNow)
        else if (retValue == inActive)
        {
            retValue = goingActive;
-           timeUntilActivation = timeNow + activationDelay;
+           activationTime = timeNow + activationDelay;
 
        }
    }
-   if (retValue == goingActive && timeNow > timeUntilActivation)
+   if (retValue == goingActive && timeNow > activationTime)
    {
        retValue = active;
    }
@@ -71,7 +71,8 @@ void loop()
       lcd.clear();
       lcd.setCursor(0, 0);
       lcd.print("Going active in: ");
-      lcd.print((timeUntilActivation-timeNow));
+      unsigned long const untilActive = activationTime > timeNow ? (activationTime-timeNow) : 0;
+      lcd.print(untilActive);
       delay(100);
       return;
   }
