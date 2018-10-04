@@ -1,12 +1,18 @@
 
 project(kayak_logger_atmega328)
 
+
 include(${ARDUINO_CMAKE_DIR}/atmega328/paths.cmake)
 include(${ARDUINO_CMAKE_DIR}/atmega328/tools.cmake)
 include(${ARDUINO_CMAKE_DIR}/atmega328/defs.cmake)
 include(${ARDUINO_CMAKE_DIR}/atmega328/core.cmake)
 include(${ARDUINO_CMAKE_DIR}/atmega328/deploy.cmake)
 
+if(ARDUINO_PATH MATCHES .*1.6.12.*)
+   message("ATMEGA328: Using supported arduino version")
+else()
+   message(FATAL_ERROR "ATMEGA328: Non supported Arduino version used. Only version 1.6.12 is currently supported, proceed with own risk. For example, SD logging is not working with 1.8.5")
+endif()
 set(ARDUINO_PINS ${ARDUINO_PATH}/hardware/arduino/avr/variants/standard)
 set(ARDUINO_LCD_SRC ${ARDUINO_PATH}/libraries/LiquidCrystal/src/)
 set(ARDUINO_WIRE_SRC ${ARDUINO_PATH}/hardware/arduino/avr/libraries/Wire/src/)
