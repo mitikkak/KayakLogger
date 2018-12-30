@@ -8,7 +8,7 @@ set(ARDUINO_CMAKE_DIR ${PROJECT_ROOT}/arduino_cmake)
 add_definitions(-DIIC_LCD)
 add_definitions(-DHALL_SWITCH_ON)
 add_definitions(-DGPS_ON)
-add_definitions(-DACCELEROMETER_ON)
+#add_definitions(-DACCELEROMETER_ON)
 #add_definitions(-DSTATUS_INDICATOR_ON)
 #add_definitions(-DRUNTIME_SERIAL_ON)
 
@@ -23,6 +23,7 @@ add_subdirectory(${PROJECT_ROOT}/googletest)
 add_subdirectory(cmake/atmega328)
 add_subdirectory(${ARDUINO_CMAKE_DIR}/esp8266/core)
 add_subdirectory(cmake/esp8266)
+add_subdirectory(cmake/esp8266_12e)
 
 #Run cmake with - DCMAKE_BUILD_TYPE = Debug
 add_subdirectory(cmake/ut)
