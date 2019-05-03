@@ -17,6 +17,12 @@ set(sources
     ${IIC_LCD_SRC}/LiquidCrystal_I2C.cpp
     ${GPS_DIR}/TinyGPS.cpp
 )
+set(ext_sources
+    ${esp32_wire_sources}
+    ${esp32_spi_sources}
+    ${esp32_fs_sources}
+    ${esp32_sd_sources}
+)
 
 set(EXT_SRC_DIR
     ${ESP32_WIRE_SRC_DIR}

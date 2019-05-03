@@ -22,8 +22,10 @@ set(ACCELEROMETER_DIR ${PROJECT_ROOT}/externals/ADXL345)
 add_subdirectory(${PROJECT_ROOT}/googletest)
 add_subdirectory(cmake/atmega328)
 add_subdirectory(${ARDUINO_CMAKE_DIR}/esp8266/core)
+add_subdirectory(${ARDUINO_CMAKE_DIR}/esp32/core)
 add_subdirectory(cmake/esp8266)
 add_subdirectory(cmake/esp8266_12e)
+add_subdirectory(cmake/esp_wroom32)
 
 #Run cmake with - DCMAKE_BUILD_TYPE = Debug
 add_subdirectory(cmake/ut)
