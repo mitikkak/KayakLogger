@@ -7,11 +7,11 @@ using namespace std;
 ADXL345 accMeter;
 #endif
 
-#ifndef ESP8266
+#if defined ESP8266 || defined ESP32
+Logger logger(SD, SDFAT_CS);
+#else
 SD_TYPE sdFat;
 Logger logger(sdFat, SDFAT_CS);
-#else
-Logger logger(SD, SDFAT_CS);
 #endif
 StatusIndicator statusIndicator(STATUS_INDICATOR_LED);
 #ifdef GPS_ON

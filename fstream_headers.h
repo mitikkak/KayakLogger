@@ -3,7 +3,7 @@
 #include <fstream>
 using namespace std;
 #else
- #ifdef ESP8266
+ #if defined ESP8266 || defined ESP32
   #include "SD.h"
  #else
   #include "SdFat.h"

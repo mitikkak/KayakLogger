@@ -3,13 +3,13 @@
 #include "FakeSdFat.h"
 using namespace std;
 #else
- #ifdef ESP8266
+ #if defined ESP8266 || defined ESP32
   #include "SD.h"
  #else
   #include "SdFat.h"
  #endif
 #endif
-#ifdef ESP8266
+#if defined ESP8266 || defined ESP32
 using namespace std;
 #endif
 #include "Logger.h"
@@ -55,7 +55,7 @@ Logger::FileStatus Logger::reserveFile(unsigned int logNumber)
   return retValue;
 }
 
-#ifdef ESP8266
+#if defined ESP8266 || defined ESP32
 StatusIndicator::Status Logger::myLogEvent(ElementQueue& queue)
 {
     String dataString = "";

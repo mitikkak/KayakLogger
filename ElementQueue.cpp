@@ -1,5 +1,5 @@
 
-#ifdef ESP8266
+#if defined ESP8266 || defined ESP32
 using namespace std;
 #endif
 #include "ElementQueue.h"
@@ -21,17 +21,17 @@ template class LogElement<int>;
 template class LogElement<double>;
 template class LogElement<unsigned int>;
 
-#ifndef ESP8266
-template <class TYPE>
-void LogElement<TYPE>::outputValue(ofstream& sdlog) const
-{
-  sdlog << value;
-}
-#else
+#if defined ESP8266 || defined ESP32
 template <class TYPE>
 void LogElement<TYPE>::outputValue(String& str) const
 {
     str += value;
+}
+#else
+template <class TYPE>
+void LogElement<TYPE>::outputValue(ofstream& sdlog) const
+{
+  sdlog << value;
 }
 #endif
 ElementQueue::ElementQueue():

@@ -8,10 +8,10 @@ struct Element
   explicit Element(const char *p_msg);
   ~Element();
   const char *msg;
-#ifndef ESP8266
-  virtual void outputValue(ofstream& sdlog) const = 0;
-#else
+#if defined ESP8266 || defined ESP32
   virtual void outputValue(String& str) const = 0;
+#else
+  virtual void outputValue(ofstream& sdlog) const = 0;
 #endif
 };
 
@@ -19,10 +19,10 @@ template <class TYPE>
 struct LogElement : public Element
 {
   explicit LogElement(const char *p_msg, TYPE const val);
-#ifndef ESP8266
-  void outputValue(ofstream& sdlog) const;
-#else
+#if defined ESP8266 || defined ESP32
   void outputValue(String& str) const;
+#else
+  void outputValue(ofstream& sdlog) const;
 #endif
   TYPE const value;
 };

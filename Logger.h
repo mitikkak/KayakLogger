@@ -4,8 +4,10 @@
 
 #include "StatusIndicator.h"
 #include "ElementQueue.h"
-#ifdef ESP8266
+#if defined ESP8266
 typedef struct SDClass SD_TYPE;
+#elif defined ESP32
+typedef struct fs::SDFS SD_TYPE;
 #else
 typedef struct SdFat SD_TYPE;
 #endif

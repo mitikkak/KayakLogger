@@ -5,7 +5,7 @@
 #ifdef UNIT_TEST
  #include "FakeSdFat.h"
 #else
- #ifdef ESP8266
+ #if defined ESP8266 || defined ESP32
   #include "SD.h"
  #else
   #include "SdFat.h"
@@ -29,8 +29,10 @@
  extern ADXL345 accMeter;
 #endif
 
-#ifdef ESP8266
+#if defined ESP8266
 typedef struct SDClass SD_TYPE;
+#elif defined ESP32
+typedef struct fs::SDFS SD_TYPE;
 #else
 typedef struct SdFat SD_TYPE;
 #endif
