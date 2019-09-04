@@ -12,10 +12,9 @@ using namespace std;
 #if defined ESP8266 || defined ESP32
 using namespace std;
 #endif
-#include "Logger.h"
-#include "LiquidCrystal_I2C.h"
+#include "Components.h"
 
-void Logger::initSdCard(LiquidCrystal_I2C& lcd)
+void Logger::initSdCard(Adafruit_PCD8544& lcd)
 {
 #ifdef RUNTIME_SERIAL_ON
 Serial.print("Initializing SD card...");
@@ -26,6 +25,7 @@ digitalWrite(sdCardChipSelect, HIGH);
 
 if (!sd.begin(sdCardChipSelect)) {
   lcd.println("Card failed, or not present");
+  lcd.display();
   delay(5000);
   // don't do anything more:
   return;

@@ -12,7 +12,7 @@ typedef struct fs::SDFS SD_TYPE;
 typedef struct SdFat SD_TYPE;
 #endif
 
-class LiquidCrystal_I2C;
+class Adafruit_PCD8544;
 class Logger
 {
   public:
@@ -25,7 +25,7 @@ class Logger
   Logger(SD_TYPE& s, int const pin):sd(s), sdCardChipSelect(pin), fileName() {}
   SD_TYPE& sd;
   const int sdCardChipSelect;
-  void initSdCard(LiquidCrystal_I2C& lcd);
+  void initSdCard(Adafruit_PCD8544& lcd);
   virtual StatusIndicator::Status myLogEvent(ElementQueue& queue);
   FileStatus reserveFile(unsigned int logNumber);
   const char* filename() const { return fileName; }

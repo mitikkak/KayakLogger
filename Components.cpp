@@ -18,11 +18,20 @@ StatusIndicator statusIndicator(STATUS_INDICATOR_LED);
 TinyGPS gps;
 #endif
 #include "Arduino.h"
-#ifdef IIC_LCD
-LiquidCrystal_I2C lcd(IIC_LCD_ADDRESS,20,4);
+
+#if defined ESP8266
+Adafruit_PCD8544 lcd = Adafruit_PCD8544(D3, D2, D1);
+#elif defined ESP32
+const uint8_t CLK = 25;
+const uint8_t DIN = 26;
+const uint8_t DC = 27;
+const uint8_t CE = 14;
+const uint8_t RESET = 12;
+Adafruit_PCD8544 lcd = Adafruit_PCD8544(CLK, DIN, DC, CE, RESET);
 #else
-LiquidCrystal lcd(LCD_RS, LCD_ENABLE, LCD_D4, LCD_D5, LCD_D6, LCD_D7);
+#error Non-supported platform for lcd!
 #endif
+
 unsigned long prevTimeTiltHandled = 0;
 unsigned long prevTimeGpsHandled = 0;
 AverageSpeed averageSpeed;

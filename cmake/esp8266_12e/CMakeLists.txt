@@ -20,7 +20,6 @@ set(sources
     ${SRC_DIR}/Components.cpp
     ${SRC_DIR}/TiltReport.cpp
     ${ACCELEROMETER_DIR}/ADXL345.cpp
-    ${IIC_LCD_SRC}/LiquidCrystal_I2C.cpp
     ${SDFAT_ESP8266_DIR}
     ${GPS_DIR}/TinyGPS.cpp
     ${SPI_ESP8266_DIR}/SPI.cpp
@@ -32,7 +31,7 @@ set(sources
     ${WIRE_ESP8266_DIR}/Wire.cpp
 )
 
-add_executable(${PROJECT_NAME} ${sources})
+add_executable(${PROJECT_NAME} ${sources} ${adafruit_lcd_esp8266_sources})
 target_link_libraries(${PROJECT_NAME} PRIVATE ${esp8266_12e_linker_options})
 add_dependencies(${PROJECT_NAME} ${esp8266_12e_core_libs})
 
@@ -49,7 +48,8 @@ target_include_directories(
     ${SDFAT_ESP8266_DIR}
     ${SPI_ESP8266_DIR}
     ${WIRE_ESP8266_DIR}
-    ${IIC_LCD_SRC}
+    ${GFX_SRC}
+    ${PCD8544_ESP8266_SRC}
     ${ACCELEROMETER_DIR}
     ${esp8266_12e_path}
 )

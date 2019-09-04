@@ -11,6 +11,7 @@ void setup()
 {
   #ifdef ACCELEROMETER_ON
   accMeter.begin();
+  accMeter.setRange(ADXL345::RANGE_4G);
   #endif
 #ifdef RUNTIME_SERIAL_ON
 #error use something else here!
@@ -19,23 +20,16 @@ void setup()
   #ifdef GPS_ON
   Serial.begin(9600);
   #endif
-#ifdef ACCELEROMETER_ON
-  accMeter.setRange(ADXL345::RANGE_4G);
-#endif
   statusIndicator.init();
   prevTimeTiltHandled = millis();
   prevTimeGpsHandled = millis();
-#ifdef IIC_LCD
-  lcd.init();
-  lcd.backlight();
+
+  lcd.begin();
+  lcd.setContrast(50);
+  lcd.clearDisplay();
   lcd.setCursor(0,0);
   lcd.print("Kayaklogger");
-  delay(3000);
-  lcd.clear();
-  lcd.setCursor(0,0);
-#else
-  lcd.begin(20, 2);
-#endif
+
   logger.initSdCard(lcd);
   delay(100);
   for (unsigned int i = 0; i < Logger::MAX_FILE_AMOUNT; i++)
@@ -52,6 +46,6 @@ void setup()
   // initialize the pushbutton pin as an input:
   pinMode(HALL_SWITCH, INPUT);
   //attachInterrupt(0, hallSwitch_ISR, CHANGE);
-  lcd.clear();
+  lcd.clearDisplay();
   lcd.setCursor(0,0);
 }

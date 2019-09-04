@@ -14,7 +14,6 @@ set(sources
     ${SRC_DIR}/Logger.cpp
     ${SRC_DIR}/Components.cpp
     ${SRC_DIR}/TiltReport.cpp
-    ${IIC_LCD_SRC}/LiquidCrystal_I2C.cpp
     ${GPS_DIR}/TinyGPS.cpp
 )
 set(ext_sources
@@ -22,6 +21,7 @@ set(ext_sources
     ${esp32_spi_sources}
     ${esp32_fs_sources}
     ${esp32_sd_sources}
+    ${adafruit_lcd_esp32_sources}
 )
 
 set(EXT_SRC_DIR
@@ -29,7 +29,8 @@ set(EXT_SRC_DIR
     ${ESP32_SD_SRC_DIR}
     ${ESP32_FS_SRC_DIR}
     ${ESP32_SPI_SRC_DIR}
-    ${IIC_LCD_SRC}
+    ${GFX_SRC}
+    ${PCD8544_ESP32_SRC}
     ${ACCELEROMETER_DIR}
     ${GPS_DIR}
 )

@@ -13,16 +13,10 @@
 #endif
 #include "fstream_headers.h"
 #include "Logger.h"
-#ifdef UNIT_TEST
- #include "FakeLiquidCrystal.h"
-#else
-  #ifndef IIC_LCD
-  #include "LiquidCrystal.h"
-  #else
-  #define IIC_LCD_ADDRESS 0x27
-  #include "LiquidCrystal_I2C.h"
-  #endif
-#endif
+
+#include "Adafruit_GFX.h"
+#include "Adafruit_PCD8544.h"
+extern Adafruit_PCD8544 lcd;
 
 #ifdef ACCELEROMETER_ON
  #include "ADXL345.h"
@@ -47,11 +41,6 @@ extern StatusIndicator statusIndicator;
   #include "TinyGPS.h"
  #endif
  extern TinyGPS gps;
-#endif
-#ifndef IIC_LCD
- extern LiquidCrystal lcd;
-#else
- extern LiquidCrystal_I2C lcd;
 #endif
 extern unsigned long prevTimeTiltHandled;
 extern unsigned long prevTimeGpsHandled;

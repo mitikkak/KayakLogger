@@ -60,7 +60,7 @@ void loop()
 
   if (activity == inActive)
   {
-     lcd.clear();
+     lcd.clearDisplay();
      lcd.setCursor(0, 0);
      lcd.print(hallSwitchState);
      delay(100);
@@ -68,7 +68,7 @@ void loop()
   }
   if (activity == goingActive)
   {
-      lcd.clear();
+      lcd.clearDisplay();
       lcd.setCursor(0, 0);
       lcd.print("Going active in: ");
       unsigned long const untilActive = activationTime > timeNow ? (activationTime-timeNow) : 0;
@@ -103,7 +103,7 @@ void loop()
         StatusIndicator::Status const distanceStatus = distance_.write(logger);
         statusIndicator.newEvent(distanceStatus, timeNow);
     }
-    lcd.clear();
+    lcd.clearDisplay();
     lcd.setCursor(0, 0);
     lcd.print(gpsReport.HDOP);
     lcd.print("|");
