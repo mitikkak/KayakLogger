@@ -60,19 +60,17 @@ void loop()
 
   if (activity == inActive)
   {
-     lcd.clearDisplay();
-     lcd.setCursor(0, 0);
-     lcd.print(hallSwitchState);
+     lcd.clear();
+     lcd.print(String(hallSwitchState));
      delay(100);
      return;
   }
   if (activity == goingActive)
   {
-      lcd.clearDisplay();
-      lcd.setCursor(0, 0);
+      lcd.clear();
       lcd.print("Going active in: ");
       unsigned long const untilActive = activationTime > timeNow ? (activationTime-timeNow) : 0;
-      lcd.print(untilActive);
+      lcd.print(String(untilActive));
       delay(100);
       return;
   }
@@ -103,25 +101,25 @@ void loop()
         StatusIndicator::Status const distanceStatus = distance_.write(logger);
         statusIndicator.newEvent(distanceStatus, timeNow);
     }
-    lcd.clearDisplay();
-    lcd.setCursor(0, 0);
-    lcd.print(gpsReport.HDOP);
-    lcd.print("|");
-    lcd.print(loggingOn);
-    lcd.setCursor(0, 1);
-    lcd.print(msg.value, 3);
-    lcd.print("|");
-    lcd.print(averageSpeed.value(), 3);
-    lcd.print("|");
-    lcd.print(distance_.value(), 3);
-    lcd.setCursor(0, 2);
-    lcd.print(gpsReport.hour());
-    lcd.print(":");
-    lcd.print(gpsReport.minute());
-    lcd.print(":");
-    lcd.print(gpsReport.second());
-    lcd.print("|");
-    lcd.print(hallSwitchState);
+    lcd.clear();
+    lcd.printer().print(gpsReport.HDOP);
+    lcd.printer().print("|");
+    lcd.printer().print(loggingOn);
+    lcd.row(1);
+    lcd.printer().print(msg.value, 3);
+    lcd.printer().print("|");
+    lcd.printer().print(averageSpeed.value(), 3);
+    lcd.printer().print("|");
+    lcd.printer().print(distance_.value(), 3);
+    lcd.row(2);
+    lcd.printer().print(gpsReport.hour());
+    lcd.printer().print(":");
+    lcd.printer().print(gpsReport.minute());
+    lcd.printer().print(":");
+    lcd.printer().print(gpsReport.second());
+    lcd.printer().print("|");
+    lcd.printer().print(hallSwitchState);
+    lcd.display();
   }
   else
   {

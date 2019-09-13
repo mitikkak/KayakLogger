@@ -13,10 +13,6 @@ void setup()
   accMeter.begin();
   accMeter.setRange(ADXL345::RANGE_4G);
   #endif
-#ifdef RUNTIME_SERIAL_ON
-#error use something else here!
-  Serial.begin(115200);
-#endif
   #ifdef GPS_ON
   Serial.begin(9600);
   #endif
@@ -24,10 +20,7 @@ void setup()
   prevTimeTiltHandled = millis();
   prevTimeGpsHandled = millis();
 
-  lcd.begin();
-  lcd.setContrast(50);
-  lcd.clearDisplay();
-  lcd.setCursor(0,0);
+  lcd.begin(50);
   lcd.print("Kayaklogger");
 
   logger.initSdCard(lcd);
@@ -37,8 +30,7 @@ void setup()
      Logger::FileStatus const status = logger.reserveFile(i);
      if (status == Logger::FileStatus::ok)
      {
-        lcd.print("File: ");
-        lcd.print(logger.filename());
+        lcd.print("File: " + String(logger.filename()));
         delay(3000);
         break;
      }
@@ -46,6 +38,5 @@ void setup()
   // initialize the pushbutton pin as an input:
   pinMode(HALL_SWITCH, INPUT);
   //attachInterrupt(0, hallSwitch_ISR, CHANGE);
-  lcd.clearDisplay();
-  lcd.setCursor(0,0);
+  lcd.clear();
 }

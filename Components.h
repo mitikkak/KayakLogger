@@ -14,9 +14,7 @@
 #include "fstream_headers.h"
 #include "Logger.h"
 
-#include "Adafruit_GFX.h"
-#include "Adafruit_PCD8544.h"
-extern Adafruit_PCD8544 lcd;
+#include "LcdIf.h"
 
 #ifdef ACCELEROMETER_ON
  #include "ADXL345.h"

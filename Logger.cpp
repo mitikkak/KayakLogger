@@ -14,7 +14,7 @@ using namespace std;
 #endif
 #include "Components.h"
 
-void Logger::initSdCard(Adafruit_PCD8544& lcd)
+void Logger::initSdCard(LcdIf& lcd)
 {
 #ifdef RUNTIME_SERIAL_ON
 Serial.print("Initializing SD card...");
@@ -24,8 +24,7 @@ pinMode(sdCardChipSelect, OUTPUT);
 digitalWrite(sdCardChipSelect, HIGH);
 
 if (!sd.begin(sdCardChipSelect)) {
-  lcd.println("Card failed, or not present");
-  lcd.display();
+  lcd.print("Card failed, or not present");
   delay(5000);
   // don't do anything more:
   return;
