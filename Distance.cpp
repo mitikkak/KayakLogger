@@ -1,5 +1,4 @@
 
-#include "StatusIndicator.h"
 #include "fstream_headers.h"
 #ifdef ESP8266
 using namespace std;
@@ -15,7 +14,7 @@ void Distance::add(const float& speed)
 {
     v += (speed*(GPS_MEASUREMENT_PERIOD_HOURS));
 }
-StatusIndicator::Status Distance::write(Logger& logger) const
+bool Distance::write(Logger& logger) const
 {
     Element* elem = new LogElement<float>("DIST", v);
     ElementQueue queue;

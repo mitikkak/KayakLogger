@@ -9,7 +9,6 @@
 #else
 #include "TinyGPS.h"
 #endif
-#include "StatusIndicator.h"
 #include "fstream_headers.h"
 #ifdef ESP8266
 using namespace std;
@@ -26,15 +25,15 @@ void GpsReport::readGps()
       gps.encode(Serial.read());
   }
 }
-StatusIndicator::Status GpsReport::write(Logger& logger)
+bool GpsReport::write(Logger& logger)
 {
-  StatusIndicator::Status gpsStatus = StatusIndicator::Status_ok;
+  bool gpsStatus = true;
   readGps();
   float latitude, longitude;
   HDOP = gps.hdop(); //, TinyGPS::GPS_INVALID_HDOP
   if (HDOP > HDOP_UNRELIABLE)
   {
-    gpsStatus = StatusIndicator::Status_hdopUnreliable;
+    gpsStatus = false;
   }
 #ifdef RUNTIME_SERIAL_ON
   Serial.println(HDOP);
@@ -65,8 +64,8 @@ StatusIndicator::Status GpsReport::write(Logger& logger)
   queue.push(longitudeElement);
   queue.push(latitudeElement);
   queue.push(hdopElement);
-  StatusIndicator::Status const logStatus = logger.myLogEvent(queue);
-  return (logStatus != StatusIndicator::Status_ok) ? logStatus : gpsStatus;
+  bool const logStatus = logger.myLogEvent(queue);
+  return (logStatus and gpsStatus);
 }
 SpeedMessage GpsReport::speedMessage() const
 {

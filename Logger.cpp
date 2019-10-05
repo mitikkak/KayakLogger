@@ -55,7 +55,7 @@ Logger::FileStatus Logger::reserveFile(unsigned int logNumber)
 }
 
 #if defined ESP8266 || defined ESP32
-StatusIndicator::Status Logger::myLogEvent(ElementQueue& queue)
+bool Logger::myLogEvent(ElementQueue& queue)
 {
     String dataString = "";
     bool somethingWasWritten = false;
@@ -82,18 +82,18 @@ StatusIndicator::Status Logger::myLogEvent(ElementQueue& queue)
     // create dir if needed
     if (!sd.mkdir("LOGS/"))
     {
-      return StatusIndicator::Status_mkDirFailed;
+      return false;
     }
     File dataFile = sd.open(fileName, FILE_WRITE);
 
     // if the file is available, write to it:
     if (!dataFile) {
-        return StatusIndicator::Status_sdAppendFailed;
+        return false;
     }
     dataFile.println(dataString);
     dataFile.close();
 
-  return StatusIndicator::Status_ok;
+  return true;
 }
 #else
 StatusIndicator::Status Logger::myLogEvent(ElementQueue& queue)

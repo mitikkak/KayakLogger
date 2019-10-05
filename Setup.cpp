@@ -16,13 +16,12 @@ void setup()
   #ifdef GPS_ON
   Serial.begin(9600);
   #endif
-  statusIndicator.init();
   prevTimeTiltHandled = millis();
   prevTimeGpsHandled = millis();
 
   lcd.begin(50);
   lcd.print("Kayaklogger");
-
+  lcd.row(1);
   logger.initSdCard(lcd);
   delay(100);
   for (unsigned int i = 0; i < Logger::MAX_FILE_AMOUNT; i++)
@@ -35,8 +34,5 @@ void setup()
         break;
      }
   }
-  // initialize the pushbutton pin as an input:
-  pinMode(HALL_SWITCH, INPUT);
-  //attachInterrupt(0, hallSwitch_ISR, CHANGE);
   lcd.clear();
 }

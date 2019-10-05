@@ -17,7 +17,7 @@ class GpsReport
 public:
   void readGps();
   GpsReport(TinyGPS& g): HDOP(), gps(g), speed(0), hour_(0), minute_(0), second_(0) {}
-  StatusIndicator::Status write(Logger& logger);
+  bool write(Logger& logger);
   SpeedMessage speedMessage() const;
   byte hour() const { return hour_; }
   byte minute() const { return minute_; }

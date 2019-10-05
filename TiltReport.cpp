@@ -1,5 +1,4 @@
 #include "PreCompilerOptions.h"
-#include "StatusIndicator.h"
 #include "fstream_headers.h"
 #ifdef ESP8266
 using namespace std;

@@ -16,7 +16,6 @@ typedef enum
     goingActive = 2
 } Activity;
 Activity activity = inActive;
-int loggingOn = 0;
 unsigned long prevTimeActivityChecked = 0;
 const unsigned long activityTimeCheckThreshold = 2000;
 unsigned long activationTime = 0;
@@ -88,43 +87,40 @@ void loop()
   GpsReport gpsReport(gps);
   if (timeNow - prevTimeGpsHandled > GPS_MEASUREMENT_PERIOD)
   {
-    StatusIndicator::Status const reportStatus = gpsReport.write(logger);
-    statusIndicator.newEvent(reportStatus, timeNow);
+    bool const reportStatus = gpsReport.write(logger);
     prevTimeGpsHandled = timeNow;
-    SpeedMessage msg = gpsReport.speedMessage();
+    SpeedMessage speed = gpsReport.speedMessage();
     if (gpsReport.HDOP < HDOP_UNRELIABLE)
     {
-        averageSpeed.add(msg.value);
-        StatusIndicator::Status const averageSpeedStatus = averageSpeed.write(logger);
-        statusIndicator.newEvent(averageSpeedStatus, timeNow);
-        distance_.add(msg.value);
-        StatusIndicator::Status const distanceStatus = distance_.write(logger);
-        statusIndicator.newEvent(distanceStatus, timeNow);
+        averageSpeed.add(speed.value);
+        bool const averageSpeedStatus = averageSpeed.write(logger);
+        distance_.add(speed.value);
+        bool const distanceStatus = distance_.write(logger);
     }
     lcd.clear();
-    lcd.printer().print(gpsReport.HDOP);
+    lcd.bigText();
+    if (gpsReport.HDOP > HDOP_UNRELIABLE) { lcd.printer().print("MAX"); }
+    else { lcd.printer().print(gpsReport.HDOP); }
     lcd.printer().print("|");
-    lcd.printer().print(loggingOn);
+    lcd.printer().print(gps.satellites());
     lcd.row(1);
-    lcd.printer().print(msg.value, 3);
-    lcd.printer().print("|");
-    lcd.printer().print(averageSpeed.value(), 3);
-    lcd.printer().print("|");
-    lcd.printer().print(distance_.value(), 3);
+    lcd.printer().print(speed.value, 3);
     lcd.row(2);
-    lcd.printer().print(gpsReport.hour());
-    lcd.printer().print(":");
-    lcd.printer().print(gpsReport.minute());
-    lcd.printer().print(":");
-    lcd.printer().print(gpsReport.second());
-    lcd.printer().print("|");
-    lcd.printer().print(hallSwitchState);
+    lcd.printer().print(averageSpeed.value(), 3);
+//    lcd.printer().print("|");
+//    lcd.printer().print(distance_.value(), 3);
+//    lcd.row(2);
+//    lcd.printer().print(gpsReport.hour());
+//    lcd.printer().print(":");
+//    lcd.printer().print(gpsReport.minute());
+//    lcd.printer().print(":");
+//    lcd.printer().print(gpsReport.second());
     lcd.display();
+    lcd.smallText();
   }
   else
   {
       gpsReport.readGps();
   }
 #endif
-  statusIndicator.continueCurrentState(timeNow);
 }

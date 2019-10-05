@@ -6,7 +6,7 @@ MESSAGE("PROJECT_ROOT: ${PROJECT_ROOT}")
 set(ARDUINO_CMAKE_DIR ${PROJECT_ROOT}/arduino_cmake)
 
 add_definitions(-DIIC_LCD)
-add_definitions(-DHALL_SWITCH_ON)
+#add_definitions(-DHALL_SWITCH_ON)
 add_definitions(-DGPS_ON)
 #add_definitions(-DACCELEROMETER_ON)
 #add_definitions(-DSTATUS_INDICATOR_ON)

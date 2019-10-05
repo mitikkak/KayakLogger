@@ -13,7 +13,6 @@ Logger logger(SD, SDFAT_CS);
 SD_TYPE sdFat;
 Logger logger(sdFat, SDFAT_CS);
 #endif
-StatusIndicator statusIndicator(STATUS_INDICATOR_LED);
 #ifdef GPS_ON
 TinyGPS gps;
 #endif

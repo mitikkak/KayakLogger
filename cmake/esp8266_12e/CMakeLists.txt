@@ -15,7 +15,6 @@ set(sources
     ${SRC_DIR}/AverageSpeed.cpp
     ${SRC_DIR}/Distance.cpp
     ${SRC_DIR}/LogElement.cpp
-    ${SRC_DIR}/StatusIndicator.cpp
     ${SRC_DIR}/Logger.cpp
     ${SRC_DIR}/Components.cpp
     ${SRC_DIR}/TiltReport.cpp

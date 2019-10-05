@@ -1,5 +1,4 @@
 
-#include "StatusIndicator.h"
 #include "fstream_headers.h"
 #ifdef ESP8266
 using namespace std;
@@ -21,7 +20,7 @@ float AverageSpeed::value() const
     }
     return 0;
 }
-StatusIndicator::Status AverageSpeed::write(Logger& logger) const
+bool AverageSpeed::write(Logger& logger) const
 {
     Element* totalElement = new LogElement<float>("AS_TOTAL", total);
     Element* samplesElement = new LogElement<unsigned int>("AS_SAMPLES", samples);

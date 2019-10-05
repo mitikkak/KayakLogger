@@ -2,7 +2,6 @@
 #ifndef _LOGGER_H
 #define _LOGGER_H
 
-#include "StatusIndicator.h"
 #include "ElementQueue.h"
 #if defined ESP8266
 typedef struct SDClass SD_TYPE;
@@ -26,7 +25,7 @@ class Logger
   SD_TYPE& sd;
   const int sdCardChipSelect;
   void initSdCard(LcdIf& lcd);
-  virtual StatusIndicator::Status myLogEvent(ElementQueue& queue);
+  virtual bool myLogEvent(ElementQueue& queue);
   FileStatus reserveFile(unsigned int logNumber);
   const char* filename() const { return fileName; }
   private:
