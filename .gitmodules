@@ -13,3 +13,6 @@
 [submodule "Adafruit-PCD8544-ShiftOut"]
 	path = Adafruit-PCD8544-ShiftOut
 	url = https://github.com/mitikkak/Adafruit-PCD8544-ShiftOut.git
+[submodule "NEO-6M_GPS"]
+	path = NEO-6M_GPS
+	url = https://github.com/PowerBroker2/NEO-6M_GPS.git
