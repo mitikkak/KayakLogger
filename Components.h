@@ -59,3 +59,19 @@ extern unsigned long prevTimeGpsHandled;
 extern AverageSpeed averageSpeed;
 #include "Distance.h"
 extern Distance distance_;
+
+#ifdef PADDLE_IMU
+
+#ifdef ESP32
+#include "WiFi.h"
+#include "AsyncUDP.h"
+#else
+#include <ESP8266WiFi.h>
+#include "ESPAsyncUDP.h"
+#endif
+
+extern const char* const ssid;
+extern const char* const password;
+extern AsyncUDP udp;
+
+#endif //PADDLE_IMU

@@ -7,20 +7,17 @@ using namespace std;
 #include "Arduino.h"
 #include "HallSwitch.h"
 
+#ifdef PADDLE_IMU
+void udpPacketReceiver(void* arg, AsyncUDPPacket& packet){}
+#endif
 void setup()
 {
-  #ifdef ACCELEROMETER_ON
-  accMeter.begin();
-  #endif
 #ifdef RUNTIME_SERIAL_ON
 #error use something else here!
   Serial.begin(115200);
 #endif
-  #ifdef GPS_ON
+#ifdef GPS_ON
   Serial.begin(9600);
-  #endif
-#ifdef ACCELEROMETER_ON
-  accMeter.setRange(ADXL345::RANGE_4G);
 #endif
   statusIndicator.init();
   prevTimeTiltHandled = millis();
@@ -50,8 +47,26 @@ void setup()
      }
   }
   // initialize the pushbutton pin as an input:
+#ifdef HALL_SWITCH_ON
   pinMode(HALL_SWITCH, INPUT);
   //attachInterrupt(0, hallSwitch_ISR, CHANGE);
+#endif
   lcd.clear();
   lcd.setCursor(0,0);
+
+#ifdef PADDLE_IMU
+  WiFi.softAP(ssid, password);
+  lcd.print("IP: ");
+  lcd.print(WiFi.softAPIP());
+  lcd.setCursor(0,1);
+  if(udp.listen(1234))
+  {
+      lcd.print("UDP Listening on IP: ");
+      lcd.print(WiFi.localIP());
+      udp.onPacket(&udpPacketReceiver);
+  }
+  delay(3000);
+  lcd.clear();
+  lcd.setCursor(0,0);
+#endif
 }

@@ -22,6 +22,8 @@ set(ext_sources
     ${esp32_spi_sources}
     ${esp32_fs_sources}
     ${esp32_sd_sources}
+    ${esp32_wifi_sources}
+    ${esp32_async_udp_sources}
 )
 
 set(EXT_SRC_DIR
@@ -29,6 +31,8 @@ set(EXT_SRC_DIR
     ${ESP32_SD_SRC_DIR}
     ${ESP32_FS_SRC_DIR}
     ${ESP32_SPI_SRC_DIR}
+    ${ESP32_WIFI_SRC_DIR}
+    ${ESP32_ASYNC_UDP_SRC_DIR}
     ${IIC_LCD_SRC}
     ${ACCELEROMETER_DIR}
     ${GPS_DIR}
