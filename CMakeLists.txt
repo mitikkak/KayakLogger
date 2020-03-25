@@ -8,6 +8,7 @@ set(ARDUINO_CMAKE_DIR ${PROJECT_ROOT}/arduino_cmake)
 add_definitions(-DIIC_LCD)
 #add_definitions(-DHALL_SWITCH_ON)
 add_definitions(-DGPS_ON)
+add_definitions(-DPADDLE_IMU)
 #add_definitions(-DACCELEROMETER_ON)
 #add_definitions(-DSTATUS_INDICATOR_ON)
 #add_definitions(-DRUNTIME_SERIAL_ON)
@@ -31,6 +32,8 @@ set(adafruit_lcd_esp32_sources
         ${PCD8544_ESP32_SRC}/Adafruit_PCD8544.cpp
         ${GFX_SRC}/Adafruit_GFX.cpp
 )
+set(ESP_ASYNC_UDP_DIR ${PROJECT_ROOT}/ESPAsyncUDP/src)
+set(esp8266_async_udp_sources ${ESP_ASYNC_UDP_DIR}/AsyncUDP.cpp)
 
 #add_subdirectory(${PROJECT_ROOT}/googletest)
 #add_subdirectory(cmake/atmega328)

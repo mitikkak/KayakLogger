@@ -6,6 +6,7 @@ include(${ARDUINO_CMAKE_DIR}/esp8266/tools.cmake)
 include(${ARDUINO_CMAKE_DIR}/esp8266/defs.cmake)
 include(${ARDUINO_CMAKE_DIR}/esp8266/core.cmake)
 include(${ARDUINO_CMAKE_DIR}/esp8266/deploy.cmake)
+include(${ARDUINO_CMAKE_DIR}/esp8266/libs.cmake)
 
 set(sources
     ${SRC_DIR}/Loop.cpp
@@ -29,6 +30,8 @@ set(sources
     ${SDFAT_ESP8266_DIR}/utility/SdFile.cpp
     ${SDFAT_ESP8266_DIR}/utility/SdVolume.cpp
     ${WIRE_ESP8266_DIR}/Wire.cpp
+    ${wifi_sources}
+    ${esp8266_async_udp_sources}
 )
 
 add_executable(${PROJECT_NAME} ${sources} ${adafruit_lcd_esp8266_sources})
@@ -48,6 +51,8 @@ target_include_directories(
     ${SDFAT_ESP8266_DIR}
     ${SPI_ESP8266_DIR}
     ${WIRE_ESP8266_DIR}
+    ${WIFI_ESP8266_DIR}
+    ${ESP_ASYNC_UDP_DIR}
     ${GFX_SRC}
     ${PCD8544_ESP8266_SRC}
     ${ACCELEROMETER_DIR}

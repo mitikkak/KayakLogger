@@ -35,4 +35,23 @@ void setup()
      }
   }
   lcd.clear();
+#ifdef PADDLE_IMU
+  WiFi.softAP(ssid, password);
+  lcd.print("IP: ");
+  lcd.print(String(WiFi.softAPIP()));
+  lcd.row(1);
+  if(udp.listen(1234))
+  {
+      lcd.print("UDP Listening on IP: ");
+      lcd.print(String(WiFi.localIP()));
+      udp.onPacket([](AsyncUDPPacket packet) {
+          Serial.printf("udpPacketReceiver[%llu] %u \n\r", millis(), numOfMsgs);
+          numOfMsgs++;
+      });
+
+  }
+  delay(3000);
+  lcd.clear();
+  lcd.row(0);
+#endif
 }

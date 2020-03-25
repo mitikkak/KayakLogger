@@ -16,3 +16,6 @@
 [submodule "NEO-6M_GPS"]
 	path = NEO-6M_GPS
 	url = https://github.com/PowerBroker2/NEO-6M_GPS.git
+[submodule "ESPAsyncUDP"]
+	path = ESPAsyncUDP
+	url = https://github.com/me-no-dev/ESPAsyncUDP.git

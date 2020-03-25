@@ -104,9 +104,11 @@ void loop()
     lcd.printer().print("|");
     lcd.printer().print(gps.satellites());
     lcd.row(1);
-    lcd.printer().print(speed.value, 3);
+    //lcd.printer().print(speed.value, 3);
+    lcd.printer().print(millis());
     lcd.row(2);
-    lcd.printer().print(averageSpeed.value(), 3);
+    lcd.printer().print(numOfMsgs);
+//    lcd.printer().print(averageSpeed.value(), 3);
 //    lcd.printer().print("|");
 //    lcd.printer().print(distance_.value(), 3);
 //    lcd.row(2);
