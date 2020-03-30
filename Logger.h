@@ -14,7 +14,7 @@ typedef struct SdFat SD_TYPE;
 class LcdIf;
 class Logger
 {
-  public:
+public:
   static constexpr unsigned int MAX_FILE_AMOUNT=5000;
   typedef enum
   {
@@ -28,10 +28,11 @@ class Logger
   virtual bool myLogEvent(ElementQueue& queue);
   FileStatus reserveFile(unsigned int logNumber);
   const char* filename() const { return fileName; }
-  private:
+private:
+  void showInitError(LcdIf& lcd) const;
   static constexpr unsigned int MAX_SIZE=30;
   char fileName[MAX_SIZE];
-  const char* const prefix = "LOGS/DATALOG";
+  const char* const prefix = "/LOGS/DATALOG";
   const char* const postfix = ".TXT";
 };
 

@@ -14,6 +14,7 @@ using namespace std;
 #endif
 #include "Components.h"
 
+#ifdef ESP8266
 void Logger::initSdCard(LcdIf& lcd)
 {
 #ifdef RUNTIME_SERIAL_ON
@@ -24,8 +25,7 @@ pinMode(sdCardChipSelect, OUTPUT);
 digitalWrite(sdCardChipSelect, HIGH);
 
 if (!sd.begin(sdCardChipSelect)) {
-  lcd.print("Card failed, or not present");
-  delay(5000);
+    showInitError(lcd);
   // don't do anything more:
   return;
 }
@@ -33,6 +33,20 @@ if (!sd.begin(sdCardChipSelect)) {
 Serial.println("card initialized.");
 #endif
 digitalWrite(sdCardChipSelect, HIGH);
+}
+#else // ESP32
+void Logger::initSdCard(LcdIf& lcd)
+{
+    if (!SD.begin())
+    {
+        showInitError(lcd);
+    }
+}
+#endif
+void Logger::showInitError(LcdIf& lcd) const
+{
+    lcd.print("Card failed, or not present");
+    delay(5000);
 }
 Logger::FileStatus Logger::reserveFile(unsigned int logNumber)
 {
@@ -79,15 +93,24 @@ bool Logger::myLogEvent(ElementQueue& queue)
     {
       dataString += "\n";
     }
+    //Serial.println(dataString);
     // create dir if needed
-    if (!sd.mkdir("LOGS/"))
+    if (!sd.mkdir("/LOGS"))
     {
+        //Serial.printf("mkdir failed \n\r");
       return false;
     }
-    File dataFile = sd.open(fileName, FILE_WRITE);
+    File dataFile = sd.open(fileName,
+#if defined ESP8266
+            FILE_WRITE
+#else
+            FILE_APPEND
+#endif
+            );
 
     // if the file is available, write to it:
     if (!dataFile) {
+        //Serial.printf("open failed \n\r");
         return false;
     }
     dataFile.println(dataString);
