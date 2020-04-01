@@ -14,6 +14,7 @@ set(sources
     ${SRC_DIR}/Components.cpp
     ${SRC_DIR}/TiltReport.cpp
     ${SRC_DIR}/LcdIf.cpp
+    ${SRC_DIR}/PaddleImuReport.cpp
     ${GPS_DIR}/TinyGPS.cpp
 )
 set(ext_sources

@@ -26,6 +26,7 @@ public:
   const int sdCardChipSelect;
   void initSdCard(LcdIf& lcd);
   virtual bool myLogEvent(ElementQueue& queue);
+  bool logMessage(const String& s) const;
   FileStatus reserveFile(unsigned int logNumber);
   const char* filename() const { return fileName; }
 private:

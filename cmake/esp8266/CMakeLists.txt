@@ -20,6 +20,7 @@ set(sources
     ${SRC_DIR}/Logger.cpp
     ${SRC_DIR}/Components.cpp
     ${SRC_DIR}/TiltReport.cpp
+    ${SRC_DIR}/PaddleImuReport.cpp
     ${ACCELEROMETER_DIR}/ADXL345.cpp
     ${IIC_LCD_SRC}/LiquidCrystal_I2C.cpp
     ${SDFAT_ESP8266_DIR}

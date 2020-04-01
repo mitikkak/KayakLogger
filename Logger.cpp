@@ -69,6 +69,29 @@ Logger::FileStatus Logger::reserveFile(unsigned int logNumber)
 }
 
 #if defined ESP8266 || defined ESP32
+bool Logger::logMessage(const String& message) const
+{
+    if (!sd.mkdir("/LOGS"))
+    {
+        //Serial.printf("mkdir failed \n\r");
+      return false;
+    }
+    File dataFile = sd.open(fileName,
+#if defined ESP8266
+            FILE_WRITE
+#else
+            FILE_APPEND
+#endif
+            );
+
+    // if the file is available, write to it:
+    if (!dataFile) {
+        //Serial.printf("open failed \n\r");
+        return false;
+    }
+    dataFile.println(message);
+    dataFile.close();
+}
 bool Logger::myLogEvent(ElementQueue& queue)
 {
     String dataString = "";
@@ -93,30 +116,7 @@ bool Logger::myLogEvent(ElementQueue& queue)
     {
       dataString += "\n";
     }
-    //Serial.println(dataString);
-    // create dir if needed
-    if (!sd.mkdir("/LOGS"))
-    {
-        //Serial.printf("mkdir failed \n\r");
-      return false;
-    }
-    File dataFile = sd.open(fileName,
-#if defined ESP8266
-            FILE_WRITE
-#else
-            FILE_APPEND
-#endif
-            );
-
-    // if the file is available, write to it:
-    if (!dataFile) {
-        //Serial.printf("open failed \n\r");
-        return false;
-    }
-    dataFile.println(dataString);
-    dataFile.close();
-
-  return true;
+    return logMessage(dataString);
 }
 #else
 StatusIndicator::Status Logger::myLogEvent(ElementQueue& queue)

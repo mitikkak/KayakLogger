@@ -60,4 +60,6 @@ extern const char* const password;
 extern AsyncUDP udp;
 extern uint32_t numOfMsgs;
 
+#include "PaddleImuReport.h"
+extern PaddleImuReport paddleImuReport;
 #endif //PADDLE_IMU

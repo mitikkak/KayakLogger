@@ -42,4 +42,5 @@ const char* const ssid = "async_udp_ap";
 const char* const password = "abba_acdc";
 AsyncUDP udp;
 uint32_t numOfMsgs{0};
+PaddleImuReport paddleImuReport;
 #endif
