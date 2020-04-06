@@ -99,24 +99,32 @@ void loop()
     }
     lcd.clear();
     lcd.bigText();
+#if 0
     if (gpsReport.HDOP > HDOP_UNRELIABLE) { lcd.printer().print("MAX"); }
     else { lcd.printer().print(gpsReport.HDOP); }
     lcd.printer().print("|");
     lcd.printer().print(gps.satellites());
     lcd.row(1);
-    //lcd.printer().print(speed.value, 3);
-    lcd.printer().print(millis());
+    lcd.printer().print(speed.value, 3);
     lcd.row(2);
-    lcd.printer().print(numOfMsgs);
-//    lcd.printer().print(averageSpeed.value(), 3);
-//    lcd.printer().print("|");
-//    lcd.printer().print(distance_.value(), 3);
-//    lcd.row(2);
-//    lcd.printer().print(gpsReport.hour());
-//    lcd.printer().print(":");
-//    lcd.printer().print(gpsReport.minute());
-//    lcd.printer().print(":");
-//    lcd.printer().print(gpsReport.second());
+    lcd.printer().print(averageSpeed.value(), 3);
+    lcd.printer().print("|");
+    lcd.printer().print(distance_.value(), 3);
+    lcd.row(2);
+    lcd.printer().print(gpsReport.hour());
+    lcd.printer().print(":");
+    lcd.printer().print(gpsReport.minute());
+    lcd.printer().print(":");
+    lcd.printer().print(gpsReport.second());
+#else
+    Serial.println(millis());
+    paddleImuReport.decodeAngularPosition();
+    lcd.printer().print(paddleImuReport.pitch());
+    lcd.row(1);
+    lcd.printer().print(paddleImuReport.roll());
+    lcd.row(2);
+    lcd.printer().print(paddleImuReport.yaw());
+#endif
     lcd.display();
     lcd.smallText();
   }

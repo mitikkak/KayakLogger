@@ -45,7 +45,7 @@ void setup()
       lcd.print("UDP Listening on IP: ");
       lcd.print(String(WiFi.localIP()));
       udp.onPacket([](AsyncUDPPacket packet) {
-          Serial.printf("udpPacketReceiver[%llu] %u \n\r", millis(), numOfMsgs);
+          //Serial.printf("udpPacketReceiver[%llu] %u \n\r", millis(), numOfMsgs);
           paddleImuReport.push(String((const char*) packet.data()));
           paddleImuReport.write(logger);
           numOfMsgs++;
