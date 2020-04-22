@@ -41,3 +41,7 @@ void LcdIf::print(const String& message)
     lcdImpl.print(message);
     display();
 }
+void LcdIf::upsideDown()
+{
+    lcdImpl.setRotation(2);
+}

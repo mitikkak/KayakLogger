@@ -17,6 +17,7 @@ public:
     void clear();
     void row(const int r);
     void display();
+    void upsideDown();
 private:
     int textSize{1};
 };

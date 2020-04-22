@@ -20,6 +20,7 @@ void setup()
   prevTimeGpsHandled = millis();
 
   lcd.begin(50);
+  lcd.upsideDown();
   lcd.print("Kayaklogger");
   lcd.row(1);
   logger.initSdCard(lcd);
