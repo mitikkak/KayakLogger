@@ -15,7 +15,7 @@ set(sources
     ${SRC_DIR}/TiltReport.cpp
     ${SRC_DIR}/LcdIf.cpp
     ${SRC_DIR}/PaddleImuReport.cpp
-    ${GPS_DIR}/TinyGPS.cpp
+    ${gps_sources}
 )
 set(ext_sources
     ${esp32_wire_sources}

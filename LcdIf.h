@@ -18,6 +18,9 @@ public:
     void row(const int r);
     void display();
     void upsideDown();
+    void sideways();
+    void separator();
+
 private:
     int textSize{1};
 };

@@ -35,9 +35,9 @@ extern Logger logger;
   #include "FakeSoftwareSerial.h"
   #include "FakeTinyGPS.h"
  #else
-  #include "TinyGPS.h"
+  #include "TinyGPS++.h"
  #endif
- extern TinyGPS gps;
+ extern TinyGPSPlus gps;
 #endif
 extern unsigned long prevTimeTiltHandled;
 extern unsigned long prevTimeGpsHandled;

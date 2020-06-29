@@ -7,19 +7,56 @@ using namespace std;
 #include "Arduino.h"
 #include "HallSwitch.h"
 
+void readGps()
+{
+  while (Serial.available())
+  {
+      gps.encode(Serial.read());
+  }
+}
+
+void displayGpsFixStatus()
+{
+    lcd.clear();
+    lcd.bigText();
+    lcd.row(0);
+    lcd.print(String(gps.gsa.numSats()));
+    lcd.separator();
+    lcd.print(String(gps.gsa.fix()));
+    lcd.row(1);
+    const int numSats = gps.satsInView.numOf();
+    lcd.print(String(numSats));
+}
+void waitUntilGpsFix()
+{
+    bool fix{false};
+    while(not fix)
+    {
+        readGps();
+        displayGpsFixStatus();
+        if (gps.gsa.fixIs3d())
+        {
+            lcd.row(2);
+            lcd.print("gps ok");
+            fix = true;
+        }
+        delay(2000);
+    }
+}
+#ifdef RELEASE_BOARD
+const int contrast{60};
+#else
+const int contrast{50};
+#endif
 void setup()
 {
-  #ifdef ACCELEROMETER_ON
-  accMeter.begin();
-  accMeter.setRange(ADXL345::RANGE_4G);
-  #endif
   #ifdef GPS_ON
   Serial.begin(9600);
   #endif
   prevTimeTiltHandled = millis();
   prevTimeGpsHandled = millis();
 
-  lcd.begin(50);
+  lcd.begin(contrast);
   lcd.upsideDown();
   lcd.print("Kayaklogger");
   lcd.row(1);
@@ -57,4 +94,5 @@ void setup()
   lcd.clear();
   lcd.row(0);
 #endif
+  waitUntilGpsFix();
 }

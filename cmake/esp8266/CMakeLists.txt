@@ -24,7 +24,7 @@ set(sources
     ${ACCELEROMETER_DIR}/ADXL345.cpp
     ${IIC_LCD_SRC}/LiquidCrystal_I2C.cpp
     ${SDFAT_ESP8266_DIR}
-    ${GPS_DIR}/TinyGPS.cpp
+    ${gps_sources}
     ${SPI_ESP8266_DIR}/SPI.cpp
     ${SDFAT_ESP8266_DIR}/File.cpp
     ${SDFAT_ESP8266_DIR}/SD.cpp

@@ -45,3 +45,11 @@ void LcdIf::upsideDown()
 {
     lcdImpl.setRotation(2);
 }
+void LcdIf::sideways()
+{
+    lcdImpl.setRotation(1);
+}
+void LcdIf::separator()
+{
+    print("|");
+}

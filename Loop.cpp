@@ -47,77 +47,60 @@ Activity isActive(const unsigned long timeNow)
    }
    return retValue;
 }
+
+unsigned long prevTimeScreenChange{0};
+static const unsigned long screenChangePeriod{30000};
+enum Screen {velocity_and_distance, time_and_gps_status};
+Screen getScreen(unsigned long timeNow)
+{
+    Screen ret{velocity_and_distance};
+    if (not gps.gsa.fixIs3d())
+    {
+        ret = time_and_gps_status;
+    }
+    if (timeNow - prevTimeScreenChange > screenChangePeriod)
+    {
+        prevTimeScreenChange = timeNow;
+        ret = time_and_gps_status;
+    }
+    return ret;
+}
 void loop()
 {
   unsigned long timeNow = millis();
-#ifdef HALL_SWITCH_ON
-  if (timeNow > (prevTimeActivityChecked + activityTimeCheckThreshold))
-  {
-    activity = isActive(timeNow);
-    prevTimeActivityChecked = timeNow;
-  }
-
-  if (activity == inActive)
-  {
-     lcd.clear();
-     lcd.print(String(hallSwitchState));
-     delay(100);
-     return;
-  }
-  if (activity == goingActive)
-  {
-      lcd.clear();
-      lcd.print("Going active in: ");
-      unsigned long const untilActive = activationTime > timeNow ? (activationTime-timeNow) : 0;
-      lcd.print(String(untilActive));
-      delay(100);
-      return;
-  }
-#endif
-#ifdef ACCELEROMETER_ON
-  if (timeNow - prevTimeTiltHandled > TILT_MEASUREMENT_PERIOD)
-  {
-    TiltReport tiltReport(accMeter);
-    StatusIndicator::Status const reportStatus = tiltReport.write(logger);
-    statusIndicator.newEvent(reportStatus, timeNow);
-    prevTimeTiltHandled = timeNow;
-  }
-#endif
-#ifdef GPS_ON
   GpsReport gpsReport(gps);
   if (timeNow - prevTimeGpsHandled > GPS_MEASUREMENT_PERIOD)
   {
-    bool const reportStatus = gpsReport.write(logger);
+    const bool reportStatus = gpsReport.write(logger);
     prevTimeGpsHandled = timeNow;
     SpeedMessage speed = gpsReport.speedMessage();
-    if (gpsReport.HDOP < HDOP_UNRELIABLE)
-    {
-        averageSpeed.add(speed.value);
-        bool const averageSpeedStatus = averageSpeed.write(logger);
-        distance_.add(speed.value);
-        bool const distanceStatus = distance_.write(logger);
-    }
+    averageSpeed.add(speed.value);
+    const bool averageSpeedStatus = averageSpeed.write(logger);
+    distance_.add(speed.value);
+    const bool distanceStatus = distance_.write(logger);
     lcd.clear();
     lcd.bigText();
-#if 0
-    if (gpsReport.HDOP > HDOP_UNRELIABLE) { lcd.printer().print("MAX"); }
-    else { lcd.printer().print(gpsReport.HDOP); }
-    lcd.printer().print("|");
-    lcd.printer().print(gps.satellites());
-    lcd.row(1);
-    lcd.printer().print(speed.value, 3);
-    lcd.row(2);
-    lcd.printer().print(averageSpeed.value(), 3);
-    lcd.printer().print("|");
-    lcd.printer().print(distance_.value(), 3);
-    lcd.row(2);
-    lcd.printer().print(gpsReport.hour());
-    lcd.printer().print(":");
-    lcd.printer().print(gpsReport.minute());
-    lcd.printer().print(":");
-    lcd.printer().print(gpsReport.second());
+#if !defined PADDLE_IMU
+    Screen const screen = getScreen(millis());
+    if (screen == velocity_and_distance)
+    {
+        lcd.printer().print(speed.value, 1);
+        lcd.row(1);
+        lcd.printer().print(averageSpeed.value(), 1);
+        lcd.row(2);
+        lcd.printer().print(distance_.value(), 3);
+    }
+    else
+    {
+        lcd.printer().print(gps.time.hour());
+        lcd.printer().print(":");
+        lcd.printer().print(gps.time.minute());
+        lcd.row(1);
+        lcd.printer().print(gps.gsa.fix());
+        lcd.row(2);
+        lcd.printer().print(gps.gsa.hdop());
+    }
 #else
-    Serial.println(millis());
     paddleImuReport.decodeAngularPosition();
     lcd.printer().print(paddleImuReport.pitch());
     lcd.row(1);
@@ -132,5 +115,4 @@ void loop()
   {
       gpsReport.readGps();
   }
-#endif
 }

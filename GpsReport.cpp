@@ -7,7 +7,7 @@
 #include "FakeSoftwareSerial.h"
 #include "FakeTinyGPS.h"
 #else
-#include "TinyGPS.h"
+#include "TinyGPS++.h"
 #endif
 #include "fstream_headers.h"
 #ifdef ESP8266
@@ -30,28 +30,29 @@ bool GpsReport::write(Logger& logger)
   bool gpsStatus = true;
   readGps();
   float latitude, longitude;
+#if 0
   HDOP = gps.hdop(); //, TinyGPS::GPS_INVALID_HDOP
   if (HDOP > HDOP_UNRELIABLE)
   {
     gpsStatus = false;
   }
+#endif
+
 #ifdef RUNTIME_SERIAL_ON
   Serial.println(HDOP);
 #endif
   Element* hdopElement = new LogElement<unsigned long>("HDOP", HDOP);
-  gps.f_get_position(&latitude, &longitude, 0);
+  latitude = gps.location.lat();
+  longitude = gps.location.lng();
+  speed = gps.speed.kmph();
   Element* latitudeElement = new LogElement<float>("Lat", latitude);
   Element* longitudeElement = new LogElement<float>("Lon", longitude);
-  int year;
-  byte month, day;
-  gps.crack_datetime(&year, &month, &day, &hour_, &minute_, &second_, 0,0);
-  speed = gps.f_speed_kmph();
-  Element* yearElement = new LogElement<int>("Y", year);
-  Element* monthElement = new LogElement<int>("Mo", month);
-  Element* dayElement = new LogElement<int>("D", day);
-  Element* hourElement = new LogElement<int>("H", hour_);
-  Element* minuteElement = new LogElement<int>("Mi", minute_);
-  Element* secondElement = new LogElement<int>("S", second_);
+  Element* yearElement = new LogElement<int>("Y", gps.date.year());
+  Element* monthElement = new LogElement<int>("Mo", gps.date.month());
+  Element* dayElement = new LogElement<int>("D", gps.date.day());
+  Element* hourElement = new LogElement<int>("H", gps.time.hour());
+  Element* minuteElement = new LogElement<int>("Mi", gps.time.minute());
+  Element* secondElement = new LogElement<int>("S", gps.time.second());
   Element* speedElement = new LogElement<float>("Spe", speed);
   ElementQueue queue;
   queue.push(speedElement);

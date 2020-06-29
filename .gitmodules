@@ -19,3 +19,6 @@
 [submodule "ESPAsyncUDP"]
 	path = ESPAsyncUDP
 	url = https://github.com/me-no-dev/ESPAsyncUDP.git
+[submodule "TinyGPSPlusExtended"]
+	path = TinyGPSPlusExtended
+	url = https://github.com/mitikkak/TinyGPSPlusExtended.git
