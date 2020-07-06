@@ -5,11 +5,11 @@
 class Distance
 {
 private:
-    float v;
+    double v;
 public:
     Distance(): v(0.0){}
-    float value() const {return v;};
-    void add(const float& speed);
+    double value() const {return v;};
+    void add(const double& speed);
     bool write(Logger& logger) const;
 };
 

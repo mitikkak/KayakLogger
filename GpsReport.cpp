@@ -18,12 +18,15 @@ using namespace std;
 #include "ElementQueue.h"
 #include "PreCompilerOptions.h"
 
-void GpsReport::readGps()
+bool GpsReport::readGps()
 {
-  while (Serial.available())
-  {
-      gps.encode(Serial.read());
-  }
+    bool ret{false};
+    while (Serial.available())
+    {
+        ret = true;
+        gps.encode(Serial.read());
+    }
+    return ret;
 }
 bool GpsReport::write(Logger& logger)
 {

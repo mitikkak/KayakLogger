@@ -26,6 +26,11 @@ void displayGpsFixStatus()
     lcd.row(1);
     const int numSats = gps.satsInView.numOf();
     lcd.print(String(numSats));
+    lcd.separator();
+    lcd.printer().print(gps.satsInView.numOfDb());
+    lcd.row(2);
+    lcd.printer().print(gps.satsInView.totalSnr());
+    lcd.display();
 }
 void waitUntilGpsFix()
 {
@@ -37,24 +42,24 @@ void waitUntilGpsFix()
         if (gps.gsa.fixIs3d())
         {
             lcd.row(2);
-            lcd.print("gps ok");
             fix = true;
         }
         delay(2000);
     }
+    lcd.clear();
+    lcd.row(0);
+    lcd.print("gps ok");
+    delay(2000);
 }
-#ifdef RELEASE_BOARD
-const int contrast{60};
-#else
-const int contrast{50};
-#endif
+
+// const int contrast{60}; // ESP8266 dev unit
+const int contrast{50}; // ESP32 finished unit
+
 void setup()
 {
-  #ifdef GPS_ON
   Serial.begin(9600);
-  #endif
-  prevTimeTiltHandled = millis();
-  prevTimeGpsHandled = millis();
+  gps.baudrateTo115200();
+  gps.periodTo5000ms();
 
   lcd.begin(contrast);
   lcd.upsideDown();

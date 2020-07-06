@@ -40,8 +40,6 @@ Adafruit_PCD8544 lcdImpl = Adafruit_PCD8544(CLK, DIN, DC, CE, RESET);
 #endif
 LcdIf lcd;
 
-unsigned long prevTimeTiltHandled = 0;
-unsigned long prevTimeGpsHandled = 0;
 AverageSpeed averageSpeed;
 Distance distance_;
 

@@ -39,8 +39,6 @@ extern Logger logger;
  #endif
  extern TinyGPSPlus gps;
 #endif
-extern unsigned long prevTimeTiltHandled;
-extern unsigned long prevTimeGpsHandled;
 #include "AverageSpeed.h"
 extern AverageSpeed averageSpeed;
 #include "Distance.h"

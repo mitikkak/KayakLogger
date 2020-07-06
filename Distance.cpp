@@ -8,11 +8,12 @@ using namespace std;
 #include "PreCompilerOptions.h"
 
 static const unsigned int GPS_MEASUREMENT_PERIOD_SECONDS = GPS_MEASUREMENT_PERIOD/1000;
-static const float GPS_MEASUREMENT_PERIOD_HOURS = static_cast<float>(GPS_MEASUREMENT_PERIOD_SECONDS)/3600;
+static const double GPS_MEASUREMENT_PERIOD_HOURS = static_cast<float>(GPS_MEASUREMENT_PERIOD_SECONDS)/3600;
 
-void Distance::add(const float& speed)
+void Distance::add(const double& speed)
 {
-    v += (speed*(GPS_MEASUREMENT_PERIOD_HOURS));
+    const double measPeriodHours = static_cast<double>(GPS_MEASUREMENT_PERIOD_SECONDS)/3600;
+    v += (speed*(measPeriodHours));
 }
 bool Distance::write(Logger& logger) const
 {

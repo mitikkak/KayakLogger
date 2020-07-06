@@ -8,95 +8,132 @@ using namespace std;
 #include "TiltReport.h"
 #include "GpsReport.h"
 
-int hallSwitchState = 0;
-typedef enum
+double const goodHdop{2.0};
+bool hdopBelowLimit()
 {
-    active = 0,
-    inActive = 1,
-    goingActive = 2
-} Activity;
-Activity activity = inActive;
-unsigned long prevTimeActivityChecked = 0;
-const unsigned long activityTimeCheckThreshold = 2000;
-unsigned long activationTime = 0;
-const unsigned long activationDelay = 180000;
-
-
-Activity isActive(const unsigned long timeNow)
+    return gps.gsa.hdop() < goodHdop;
+}
+bool gpsGoodStatus()
 {
-   hallSwitchState = analogRead(HALL_SWITCH);
-   const int activityLowThreshold = 750;
-   const int activityHighThreshold = 850;
-   Activity retValue = activity;
-   if ((hallSwitchState < activityLowThreshold) || (hallSwitchState > activityHighThreshold) )
-   {
-       if (retValue == active)
-       {
-           retValue = inActive;
-       }
-       else if (retValue == inActive)
-       {
-           retValue = goingActive;
-           activationTime = timeNow + activationDelay;
-
-       }
-   }
-   if (retValue == goingActive && timeNow > activationTime)
-   {
-       retValue = active;
-   }
-   return retValue;
+    return(gps.gsa.fixIs3d() and hdopBelowLimit());
 }
 
-unsigned long prevTimeScreenChange{0};
-static const unsigned long screenChangePeriod{30000};
-enum Screen {velocity_and_distance, time_and_gps_status};
-Screen getScreen(unsigned long timeNow)
+class ScreenSelector
 {
-    Screen ret{velocity_and_distance};
-    if (not gps.gsa.fixIs3d())
+public:
+    enum Type {velocity_and_distance, time_status, gps_status};
+    ScreenSelector()
+    : currentStatus{unstable},
+      goodStatus{0},
+      listIdx{0},
+      unstableList{time_status, velocity_and_distance,
+               gps_status, velocity_and_distance,
+               gps_status, velocity_and_distance,
+               gps_status, velocity_and_distance,
+               gps_status, velocity_and_distance},
+      stableList{time_status,
+            velocity_and_distance, velocity_and_distance,
+            velocity_and_distance, velocity_and_distance,
+            gps_status,
+            velocity_and_distance, velocity_and_distance,
+            velocity_and_distance, velocity_and_distance}
+    {}
+    void update()
     {
-        ret = time_and_gps_status;
+        if (not gpsGoodStatus())
+        {
+            goodStatus = 0;
+            currentStatus = unstable;
+        }
+        else
+        {
+            goodStatus++;
+            if (goodStatus > 10 and currentStatus == unstable)
+            {
+                currentStatus = stable;
+            }
+        }
+        updateListIndex();
     }
-    if (timeNow - prevTimeScreenChange > screenChangePeriod)
+    Type get() const
     {
-        prevTimeScreenChange = timeNow;
-        ret = time_and_gps_status;
+        return (currentStatus == stable) ? stableList[listIdx] : unstableList[listIdx];
     }
-    return ret;
+private:
+    void updateListIndex()
+    {
+        listIdx++;
+        if (listIdx > numOf)
+        {
+            listIdx = 0;
+        }
+    }
+    enum status {unstable, stable};
+    status currentStatus;
+    unsigned int listIdx;
+    unsigned int goodStatus;
+    static const unsigned int numOf{10};
+    const Type unstableList[numOf];
+    const Type stableList[numOf];
+};
+
+ScreenSelector screenSelector;
+
+unsigned long prevTimeLogged{0};
+bool timeToLog(unsigned long timeNow)
+{
+    return (timeNow - prevTimeLogged > GPS_MEASUREMENT_PERIOD);
 }
+int timesLogged{0};
 void loop()
 {
   unsigned long timeNow = millis();
   GpsReport gpsReport(gps);
-  if (timeNow - prevTimeGpsHandled > GPS_MEASUREMENT_PERIOD)
+  bool const gpsUpdated = gpsReport.readGps();
+  // Purpose is to not log during GPS's  burst of sentences
+  if (not gpsUpdated and timeToLog(timeNow))
   {
+      timesLogged++;
     const bool reportStatus = gpsReport.write(logger);
-    prevTimeGpsHandled = timeNow;
-    SpeedMessage speed = gpsReport.speedMessage();
-    averageSpeed.add(speed.value);
-    const bool averageSpeedStatus = averageSpeed.write(logger);
-    distance_.add(speed.value);
-    const bool distanceStatus = distance_.write(logger);
+    prevTimeLogged = timeNow;
+    SpeedMessage speed;
+    if (gpsGoodStatus())
+    {
+        speed = gpsReport.speedMessage();
+        averageSpeed.add(speed.value);
+        const bool averageSpeedStatus = averageSpeed.write(logger);
+        distance_.add(speed.value);
+        const bool distanceStatus = distance_.write(logger);
+    }
     lcd.clear();
     lcd.bigText();
 #if !defined PADDLE_IMU
-    Screen const screen = getScreen(millis());
-    if (screen == velocity_and_distance)
+    screenSelector.update();
+    if (screenSelector.get() == ScreenSelector::velocity_and_distance)
     {
         lcd.printer().print(speed.value, 1);
         lcd.row(1);
-        lcd.printer().print(averageSpeed.value(), 1);
+        lcd.printer().print(averageSpeed.value(), 3);
         lcd.row(2);
         lcd.printer().print(distance_.value(), 3);
     }
-    else
+    else if (screenSelector.get() == ScreenSelector::time_status)
     {
         lcd.printer().print(gps.time.hour());
         lcd.printer().print(":");
         lcd.printer().print(gps.time.minute());
         lcd.row(1);
+        lcd.printer().print(timeNow / 1000 / 60);
+    }
+    else if (screenSelector.get() == ScreenSelector::gps_status)
+    {
+        lcd.printer().print(gps.satsInView.numOfDb());
+        lcd.printer().print(":");
+        lcd.printer().print(gps.satsInView.totalSnr());
+        lcd.row(1);
         lcd.printer().print(gps.gsa.fix());
+        lcd.printer().print(":");
+        lcd.print(String(gps.gsa.numSats()));
         lcd.row(2);
         lcd.printer().print(gps.gsa.hdop());
     }
@@ -110,9 +147,5 @@ void loop()
 #endif
     lcd.display();
     lcd.smallText();
-  }
-  else
-  {
-      gpsReport.readGps();
   }
 }

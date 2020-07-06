@@ -2,7 +2,7 @@
 struct SpeedMessage
 {
     char* header;
-    float value;
+    double value;
 };
 
 class GpsReport
@@ -11,9 +11,9 @@ class GpsReport
   unsigned int HDOP;
   TinyGPSPlus& gps;
   
-  float speed;
+  double speed;
 public:
-  void readGps();
+  bool readGps();
   GpsReport(TinyGPSPlus& g): HDOP(), gps(g), speed(0) {}
   bool write(Logger& logger);
   SpeedMessage speedMessage() const;
