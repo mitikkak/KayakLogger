@@ -43,6 +43,11 @@ LcdIf lcd;
 AverageSpeed averageSpeed;
 Distance distance_;
 
+const char* const ssid = "kayak_logger_ap";
+const char* const password = "";
+const char* const mdnsHost = "kayaklogger";
+AsyncWebServerWrapper server;
+
 #ifdef PADDLE_IMU
 const char* const ssid = "async_udp_ap";
 const char* const password = "abba_acdc";

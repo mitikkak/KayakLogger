@@ -7,15 +7,13 @@
 typedef struct SDClass SD_TYPE;
 #elif defined ESP32
 typedef struct fs::SDFS SD_TYPE;
-#else
-typedef struct SdFat SD_TYPE;
 #endif
 
 class LcdIf;
 class Logger
 {
 public:
-  static constexpr unsigned int MAX_FILE_AMOUNT=5000;
+  static constexpr unsigned int MAX_FILE_AMOUNT=11;
   typedef enum
   {
     alreadyTaken = 0,
@@ -33,7 +31,7 @@ private:
   void showInitError(LcdIf& lcd) const;
   static constexpr unsigned int MAX_SIZE=30;
   char fileName[MAX_SIZE];
-  const char* const prefix = "/LOGS/DATALOG";
+  const char* const prefix = "/DATALOG";
   const char* const postfix = ".TXT";
 };
 

@@ -1,4 +1,6 @@
 
+#pragma once
+
 #include "PreCompilerOptions.h"
 #include "PinLayout.h"
 
@@ -15,11 +17,6 @@
 #include "Logger.h"
 
 #include "LcdIf.h"
-
-#ifdef ACCELEROMETER_ON
- #include "ADXL345.h"
- extern ADXL345 accMeter;
-#endif
 
 #if defined ESP8266
 typedef struct SDClass SD_TYPE;
@@ -43,18 +40,23 @@ extern Logger logger;
 extern AverageSpeed averageSpeed;
 #include "Distance.h"
 extern Distance distance_;
-#ifdef PADDLE_IMU
-
 #ifdef ESP32
 #include "WiFi.h"
 #include "AsyncUDP.h"
+#include "ESPmDNS.h"
 #else
 #include <ESP8266WiFi.h>
 #include "ESPAsyncUDP.h"
+#include "ESP8266mDNS.h"
 #endif
-
 extern const char* const ssid;
 extern const char* const password;
+extern const char* const mdnsHost;
+#include "AsyncWebServerWrapper.h"
+extern AsyncWebServerWrapper server;
+#ifdef PADDLE_IMU
+
+
 extern AsyncUDP udp;
 extern uint32_t numOfMsgs;
 

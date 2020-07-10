@@ -22,3 +22,12 @@
 [submodule "TinyGPSPlusExtended"]
 	path = TinyGPSPlusExtended
 	url = https://github.com/mitikkak/TinyGPSPlusExtended.git
+[submodule "ESPAsyncWebServer"]
+	path = ESPAsyncWebServer
+	url = https://github.com/me-no-dev/ESPAsyncWebServer.git
+[submodule "ESPAsyncTCP"]
+	path = ESPAsyncTCP
+	url = https://github.com/me-no-dev/ESPAsyncTCP.git
+[submodule "AsyncTCP_ESP32"]
+	path = AsyncTCP_ESP32
+	url = https://github.com/me-no-dev/AsyncTCP.git

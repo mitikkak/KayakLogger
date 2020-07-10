@@ -21,18 +21,18 @@ set(sources
     ${SRC_DIR}/TiltReport.cpp
     ${SRC_DIR}/LcdIf.cpp
     ${SRC_DIR}/PaddleImuReport.cpp
+    ${SRC_DIR}/SdWrapper.cpp
+    ${SRC_DIR}/AsyncWebServerWrapper.cpp
     ${ACCELEROMETER_DIR}/ADXL345.cpp
-    ${SDFAT_ESP8266_DIR}
     ${gps_sources}
     ${SPI_ESP8266_DIR}/SPI.cpp
-    ${SDFAT_ESP8266_DIR}/File.cpp
-    ${SDFAT_ESP8266_DIR}/SD.cpp
-    ${SDFAT_ESP8266_DIR}/utility/Sd2Card.cpp
-    ${SDFAT_ESP8266_DIR}/utility/SdFile.cpp
-    ${SDFAT_ESP8266_DIR}/utility/SdVolume.cpp
+    ${esp8266_sd_sources}
     ${WIRE_ESP8266_DIR}/Wire.cpp
     ${wifi_sources}
     ${esp8266_async_udp_sources}
+    ${esp_async_web_server_sources}
+    ${esp_async_tcp_sources}
+    ${esp8266_mdns_sources}
 )
 
 add_executable(${PROJECT_NAME} ${sources} ${adafruit_lcd_esp8266_sources})
@@ -58,6 +58,10 @@ target_include_directories(
     ${PCD8544_ESP8266_SRC}
     ${ACCELEROMETER_DIR}
     ${esp8266_12e_path}
+    ${ESP_ASYNC_WEB_SERVER_DIR}
+    ${ESP_ASYNC_TCP_DIR}
+    ${HASH_ESP8266_DIR}
+    ${MDNS_ESP8266_DIR}
 )
 
 elf_to_bin_esp8266_12e(${PROJECT_NAME})

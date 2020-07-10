@@ -45,6 +45,7 @@ void Logger::initSdCard(LcdIf& lcd)
 #endif
 void Logger::showInitError(LcdIf& lcd) const
 {
+    lcd.clear();
     lcd.print("Card failed, or not present");
     delay(5000);
 }
@@ -68,14 +69,13 @@ Logger::FileStatus Logger::reserveFile(unsigned int logNumber)
   return retValue;
 }
 
-#if defined ESP8266 || defined ESP32
 bool Logger::logMessage(const String& message) const
 {
-    if (!sd.mkdir("/LOGS"))
-    {
-        //Serial.printf("mkdir failed \n\r");
-      return false;
-    }
+//    if (!sd.mkdir("/LOGS"))
+//    {
+//        //Serial.printf("mkdir failed \n\r");
+//      return false;
+//    }
     File dataFile = sd.open(fileName,
 #if defined ESP8266
             FILE_WRITE
@@ -118,46 +118,3 @@ bool Logger::myLogEvent(ElementQueue& queue)
     }
     return logMessage(dataString);
 }
-#else
-StatusIndicator::Status Logger::myLogEvent(ElementQueue& queue)
-{
-  // create dir if needed
-  if (!sd.mkdir("LOGS/"))
-  {
-      // TODO: returning here causes memory leak of queue elements
- //      return StatusIndicator::Status_mkDirFailed;
-  }
-  // create or open a file for append
-  ofstream sdlog(fileName, ios::out | ios::app);
-  bool somethingWasWritten = false;
-
-  sdlog.precision(6);
-  // append a line to the file
-
-  while (queue.peek())
-  {
-    Element* element = queue.pop();
-    if (element)
-    {
-      somethingWasWritten = true;
-      sdlog << element->msg << ": ";
-      element->outputValue(sdlog);
-      sdlog << " ; ";
-      delete element;
-    }
-  }
-
-
-  if (somethingWasWritten)
-  {
-    sdlog << endl;
-  }
-  // check for errors
-  if (!sdlog) /**/
-  {
-    return StatusIndicator::Status_sdAppendFailed;
-  }
-  // file will be closed when sdlog goes out of scope
-  return StatusIndicator::Status_ok;
-}
-#endif

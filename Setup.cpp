@@ -5,7 +5,6 @@ using namespace std;
 #endif
 #include "Components.h"
 #include "Arduino.h"
-#include "HallSwitch.h"
 
 void readGps()
 {
@@ -51,9 +50,29 @@ void waitUntilGpsFix()
     lcd.print("gps ok");
     delay(2000);
 }
+void createWifiAp()
+{
+    lcd.clear();
+    lcd.smallText();
+    WiFi.softAP(ssid, password);
+    lcd.print("IP: ");
+    lcd.print(String(WiFi.softAPIP()));
+    delay(1000);
+}
 
-// const int contrast{60}; // ESP8266 dev unit
-const int contrast{50}; // ESP32 finished unit
+void createMdns()
+{
+    if (!MDNS.begin(mdnsHost))
+    {
+        lcd.clear();
+        lcd.smallText();
+        lcd.print("MDNS failed!");
+        delay(3000);
+    }
+}
+
+ const int contrast{60}; // ESP8266 dev unit
+//const int contrast{50}; // ESP32 finished unit
 
 void setup()
 {
@@ -65,8 +84,19 @@ void setup()
   lcd.upsideDown();
   lcd.print("Kayaklogger");
   lcd.row(1);
+  delay(1000);
+  createWifiAp();
+  createMdns();
+  delay(100);
   logger.initSdCard(lcd);
   delay(100);
+  server.create();
+  server.waitUntilConnectionServed(lcd);
+  server.destroy();
+  // With ESP8266 v.2.4.0 keep file reservation after web server operations!
+  // Bug in SD's exists(): when it returns false, content listing breaks
+  // TODO: update to v.2.5.2
+  lcd.clear();
   for (unsigned int i = 0; i < Logger::MAX_FILE_AMOUNT; i++)
   {
      Logger::FileStatus const status = logger.reserveFile(i);
@@ -77,12 +107,8 @@ void setup()
         break;
      }
   }
-  lcd.clear();
 #ifdef PADDLE_IMU
-  WiFi.softAP(ssid, password);
-  lcd.print("IP: ");
-  lcd.print(String(WiFi.softAPIP()));
-  lcd.row(1);
+  createWifiAp();
   if(udp.listen(1234))
   {
       lcd.print("UDP Listening on IP: ");
@@ -97,7 +123,6 @@ void setup()
   }
   delay(3000);
   lcd.clear();
-  lcd.row(0);
 #endif
   waitUntilGpsFix();
 }
