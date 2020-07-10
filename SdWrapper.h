@@ -1,9 +1,10 @@
 #pragma once
 
-//class File;
+#include "SD.h"
 class SdWrapper
 {
 public:
     int printCardContent(char* const area, const int maxSize) const;
-    //File getFirst();
+    File getFirst();
+    void deleteFirst();
 };
