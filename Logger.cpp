@@ -49,24 +49,68 @@ void Logger::showInitError(LcdIf& lcd) const
     lcd.print("Card failed, or not present");
     delay(5000);
 }
-Logger::FileStatus Logger::reserveFile(unsigned int logNumber)
+void Logger::reserveFile()
 {
-  FileStatus retValue = FileStatus::ok;
-  char candidate[MAX_SIZE]{};
-  strcat(candidate, prefix);
-  char itoa_buffer[5]{};
-  const char* const number_cstr = itoa(logNumber, itoa_buffer, DEC);
-  strcat(candidate, number_cstr);
-  strcat(candidate, postfix);
-  if (sd.exists(candidate))
-  {
-    retValue = FileStatus::alreadyTaken;
-  }
-  else
-  {
-    strcat(fileName, candidate);
-  }
-  return retValue;
+    bool reserved{false};
+    int cnt{0};
+    while(not reserved)
+    {
+        lcd.clear();
+        lcd.smallText();
+        lcd.print("Get filename ");
+        lcd.print(String(cnt++));
+        gps.readSerial();
+        lcd.row(1);
+        bool const fixIs3d = gps.gsa.fixIs3d();
+        bool const dateInRange = gps.date.inRange();
+        bool const timeInRange = gps.time.inRange();
+        lcd.print(String(fixIs3d));
+        lcd.separator();
+        lcd.print(String(dateInRange));
+        lcd.separator();
+        lcd.print(String(timeInRange));
+        if (fixIs3d and dateInRange and timeInRange)
+        {
+            const int bufferSize{5};
+            char itoa_buffer[bufferSize]{};
+            strcat(fileName, prefix);
+            int length{strlen(prefix)};
+            const char* const year_cstr = itoa(gps.date.year(), itoa_buffer, DEC);
+            const int yearLength = strlen(year_cstr);
+            memcpy(&fileName[length], year_cstr, yearLength);
+            length += yearLength;
+            fileName[length++] = '_';
+            memset(itoa_buffer, 0, bufferSize);
+            const char* const month_cstr = itoa(gps.date.month(), itoa_buffer, DEC);
+            const int monthLength = strlen(month_cstr);
+            memcpy(&fileName[length], month_cstr, monthLength);
+            length += monthLength;
+            fileName[length++] = '_';
+            memset(itoa_buffer, 0, bufferSize);
+            const char* const day_cstr = itoa(gps.date.day(), itoa_buffer, DEC);
+            const int dayLength = strlen(day_cstr);
+            memcpy(&fileName[length], day_cstr, dayLength);
+            length += dayLength;
+            fileName[length++] = '_';
+            memset(itoa_buffer, 0, bufferSize);
+            const char* const hour_cstr = itoa(gps.time.hour(), itoa_buffer, DEC);
+            const int hourLength = strlen(hour_cstr);
+            memcpy(&fileName[length], hour_cstr, hourLength);
+            length += hourLength;
+            fileName[length++] = '_';
+            memset(itoa_buffer, 0, bufferSize);
+            const char* const minute_cstr = itoa(gps.time.minute(), itoa_buffer, DEC);
+            const int minuteLength = strlen(minute_cstr);
+            memcpy(&fileName[length], minute_cstr, minuteLength);
+            length += minuteLength;
+            memset(itoa_buffer, 0, bufferSize);
+            strcat(fileName, postfix);
+            lcd.row(2);
+            lcd.print(fileName);
+            reserved = true;
+        }
+        delay(2000);
+    }
 }
 
 bool Logger::logMessage(const String& message) const
@@ -86,7 +130,10 @@ bool Logger::logMessage(const String& message) const
 
     // if the file is available, write to it:
     if (!dataFile) {
-        //Serial.printf("open failed \n\r");
+        lcd.clear();
+        lcd.smallText();
+        lcd.print("sd write failed");
+        delay(1000);
         return false;
     }
     dataFile.println(message);

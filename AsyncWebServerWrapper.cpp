@@ -1,5 +1,7 @@
 
+#ifdef ESP8266
 #define ESP8266_OLD_ARDUINO_USED // TODO: update to 2.5.2 or newer
+#endif
 
 #include "AsyncWebServerWrapper.h"
 #include "ESPAsyncWebServer.h"

@@ -6,14 +6,6 @@ using namespace std;
 #include "Components.h"
 #include "Arduino.h"
 
-void readGps()
-{
-  while (Serial.available())
-  {
-      gps.encode(Serial.read());
-  }
-}
-
 void displayGpsFixStatus()
 {
     lcd.clear();
@@ -36,7 +28,7 @@ void waitUntilGpsFix()
     bool fix{false};
     while(not fix)
     {
-        readGps();
+        gps.readSerial();
         displayGpsFixStatus();
         if (gps.gsa.fixIs3d())
         {
@@ -93,20 +85,6 @@ void setup()
   server.create();
   server.waitUntilConnectionServed(lcd);
   server.destroy();
-  // With ESP8266 v.2.4.0 keep file reservation after web server operations!
-  // Bug in SD's exists(): when it returns false, content listing breaks
-  // TODO: update to v.2.5.2
-  lcd.clear();
-  for (unsigned int i = 0; i < Logger::MAX_FILE_AMOUNT; i++)
-  {
-     Logger::FileStatus const status = logger.reserveFile(i);
-     if (status == Logger::FileStatus::ok)
-     {
-        lcd.print("File: " + String(logger.filename()));
-        delay(3000);
-        break;
-     }
-  }
 #ifdef PADDLE_IMU
   createWifiAp();
   if(udp.listen(1234))
@@ -125,4 +103,5 @@ void setup()
   lcd.clear();
 #endif
   waitUntilGpsFix();
+  logger.reserveFile(); // After 3d fix we supposedly have proper date and time
 }
