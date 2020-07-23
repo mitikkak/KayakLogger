@@ -18,45 +18,24 @@ using namespace std;
 #include "ElementQueue.h"
 #include "PreCompilerOptions.h"
 
-bool GpsReport::readGps()
-{
-    bool ret{false};
-    while (Serial.available())
-    {
-        ret = true;
-        gps.encode(Serial.read());
-    }
-    return ret;
-}
 bool GpsReport::write(Logger& logger)
 {
   bool gpsStatus = true;
-  readGps();
-  float latitude, longitude;
-#if 0
-  HDOP = gps.hdop(); //, TinyGPS::GPS_INVALID_HDOP
-  if (HDOP > HDOP_UNRELIABLE)
-  {
-    gpsStatus = false;
-  }
-#endif
+  gps.readSerial();
 
-#ifdef RUNTIME_SERIAL_ON
-  Serial.println(HDOP);
-#endif
   Element* hdopElement = new LogElement<unsigned long>("HDOP", HDOP);
-  latitude = gps.location.lat();
-  longitude = gps.location.lng();
   speed = gps.speed.kmph();
-  Element* latitudeElement = new LogElement<float>("Lat", latitude);
-  Element* longitudeElement = new LogElement<float>("Lon", longitude);
+  unsigned const int locationPrecision{7};
+  unsigned const int speedPrecision{3};
+  Element* latitudeElement = new LogElement<double>("Lat", gps.location.lat(), locationPrecision);
+  Element* longitudeElement = new LogElement<double>("Lon", gps.location.lng(), locationPrecision);
   Element* yearElement = new LogElement<int>("Y", gps.date.year());
   Element* monthElement = new LogElement<int>("Mo", gps.date.month());
   Element* dayElement = new LogElement<int>("D", gps.date.day());
   Element* hourElement = new LogElement<int>("H", gps.time.hour());
   Element* minuteElement = new LogElement<int>("Mi", gps.time.minute());
   Element* secondElement = new LogElement<int>("S", gps.time.second());
-  Element* speedElement = new LogElement<float>("Spe", speed);
+  Element* speedElement = new LogElement<double>("Spe", speed, speedPrecision);
   ElementQueue queue;
   queue.push(speedElement);
   queue.push(secondElement);

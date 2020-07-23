@@ -17,7 +17,7 @@ void Distance::add(const double& speed)
 }
 bool Distance::write(Logger& logger) const
 {
-    Element* elem = new LogElement<float>("DIST", v);
+    Element* elem = new LogElement<double>("DIST", v, 3);
     ElementQueue queue;
     queue.push(elem);
     return logger.myLogEvent(queue);

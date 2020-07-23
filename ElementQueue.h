@@ -18,13 +18,14 @@ struct Element
 template <class TYPE>
 struct LogElement : public Element
 {
-  explicit LogElement(const char *p_msg, TYPE const val);
+  explicit LogElement(const char *p_msg, TYPE const val, unsigned const int prc = 0);
 #if defined ESP8266 || defined ESP32
   void outputValue(String& str) const;
 #else
   void outputValue(ofstream& sdlog) const;
 #endif
   TYPE const value;
+  unsigned const int precision;
 };
 
 struct ElementQueue

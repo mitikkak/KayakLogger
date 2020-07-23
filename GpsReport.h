@@ -13,7 +13,6 @@ class GpsReport
   
   double speed;
 public:
-  bool readGps();
   GpsReport(TinyGPSPlus& g): HDOP(), gps(g), speed(0) {}
   bool write(Logger& logger);
   SpeedMessage speedMessage() const;

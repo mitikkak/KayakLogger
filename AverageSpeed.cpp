@@ -7,12 +7,12 @@ using namespace std;
 #include "AverageSpeed.h"
 #include "PreCompilerOptions.h"
 
-void AverageSpeed::add(const float& speed)
+void AverageSpeed::add(const double& speed)
 {
     samples++;
     total+=speed;
 }
-float AverageSpeed::value() const
+double AverageSpeed::value() const
 {
     if(samples)
     {
@@ -22,9 +22,9 @@ float AverageSpeed::value() const
 }
 bool AverageSpeed::write(Logger& logger) const
 {
-    Element* totalElement = new LogElement<float>("AS_TOTAL", total);
+    Element* totalElement = new LogElement<double>("AS_TOTAL", total, 3);
     Element* samplesElement = new LogElement<unsigned int>("AS_SAMPLES", samples);
-    Element* resultElement = new LogElement<float>("AS_RES", value());
+    Element* resultElement = new LogElement<double>("AS_RES", value(), 3);
     ElementQueue queue;
     queue.push(totalElement);
     queue.push(samplesElement);

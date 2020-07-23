@@ -2,7 +2,6 @@
 #define _PRE_COMPILER_OPTIONS_H
 
 #define GPS_MEASUREMENT_PERIOD 5000
-#define HDOP_UNRELIABLE  200
 //#define RELEASE_BOARD
 
 #endif

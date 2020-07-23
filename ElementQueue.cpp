@@ -11,8 +11,8 @@ Element::~Element()
 }
 
 template <class TYPE>
-LogElement<TYPE>::LogElement(const char *p_msg, TYPE const val):
-  Element(p_msg), value(val)
+LogElement<TYPE>::LogElement(const char *p_msg, TYPE const val, unsigned const int prc):
+  Element(p_msg), value(val), precision(prc)
 {
 }
 template class LogElement<unsigned long>;
@@ -21,19 +21,18 @@ template class LogElement<int>;
 template class LogElement<double>;
 template class LogElement<unsigned int>;
 
-#if defined ESP8266 || defined ESP32
 template <class TYPE>
 void LogElement<TYPE>::outputValue(String& str) const
 {
-    str += value;
+    if (precision)
+    {
+        str += String(value, precision);
+    }
+    else
+    {
+        str += value;
+    }
 }
-#else
-template <class TYPE>
-void LogElement<TYPE>::outputValue(ofstream& sdlog) const
-{
-  sdlog << value;
-}
-#endif
 ElementQueue::ElementQueue():
 numOf(0)
 { for (int i = 0; i < maximum; i++) {elems[i] = 0;} }

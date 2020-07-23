@@ -5,12 +5,12 @@
 class AverageSpeed
 {
 private:
-    float total;
+    double total;
     unsigned int samples;
 public:
     AverageSpeed(): total(0), samples(0) {}
-    float value() const;
-    void add(const float& speed);
+    double value() const;
+    void add(const double& speed);
     bool write(Logger& logger) const;
 };
 

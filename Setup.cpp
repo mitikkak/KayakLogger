@@ -47,20 +47,26 @@ void createWifiAp()
     lcd.clear();
     lcd.smallText();
     WiFi.softAP(ssid, password);
-    lcd.print("IP: ");
-    lcd.print(String(WiFi.softAPIP()));
-    delay(1000);
+    lcd.print("AP: ");
+    lcd.row(1);
+    lcd.print(ssid);
+    delay(3000);
 }
 
 void createMdns()
 {
+    lcd.row(3);
+    lcd.print("domain:");
+    lcd.row(4);
     if (!MDNS.begin(mdnsHost))
     {
-        lcd.clear();
-        lcd.smallText();
-        lcd.print("MDNS failed!");
-        delay(3000);
+        lcd.print("failed!");
     }
+    else
+    {
+        lcd.print(String(mdnsHost) + String(".local"));
+    }
+    delay(3000);
 }
 
  const int contrast{60}; // ESP8266 dev unit

@@ -8,10 +8,10 @@ using namespace std;
 #include "TiltReport.h"
 #include "GpsReport.h"
 
-double const goodHdop{2.0};
+double const badHdop{3.0};
 bool hdopBelowLimit()
 {
-    return gps.gsa.hdop() < goodHdop;
+    return gps.gsa.hdop() < badHdop;
 }
 bool gpsGoodStatus()
 {
@@ -84,16 +84,14 @@ bool timeToLog(unsigned long timeNow)
 {
     return (timeNow - prevTimeLogged > GPS_MEASUREMENT_PERIOD);
 }
-int timesLogged{0};
 void loop()
 {
   unsigned long timeNow = millis();
   GpsReport gpsReport(gps);
-  bool const gpsUpdated = gpsReport.readGps();
+  bool const gpsUpdated = gps.readSerial();
   // Purpose is to not log during GPS's  burst of sentences
   if (not gpsUpdated and timeToLog(timeNow))
   {
-      timesLogged++;
     const bool reportStatus = gpsReport.write(logger);
     prevTimeLogged = timeNow;
     SpeedMessage speed;
