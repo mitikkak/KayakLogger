@@ -48,7 +48,7 @@ public:
         else
         {
             goodStatus++;
-            if (goodStatus > 10 and currentStatus == unstable)
+            if (goodStatus > numOf and currentStatus == unstable)
             {
                 currentStatus = stable;
             }
@@ -63,7 +63,7 @@ private:
     void updateListIndex()
     {
         listIdx++;
-        if (listIdx > numOf)
+        if (listIdx >= numOf)
         {
             listIdx = 0;
         }

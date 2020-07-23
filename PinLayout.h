@@ -12,7 +12,7 @@ TX-GPS
 #else
 
 #ifdef RELEASE_BOARD
-#error SDFAT_CS not defined
+#define SDFAT_CS 5
 #else
 #define SDFAT_CS 23
 #endif
