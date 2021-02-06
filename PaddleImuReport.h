@@ -9,6 +9,7 @@ public:
     PaddleImuReport();
     void push(const String& s);
     void write(Logger& logger);
+    int sn() const { return sn_; }
     int pitch() const { return pitch_; }
     int roll() const { return roll_; }
     int yaw() const { return yaw_; }
@@ -18,6 +19,7 @@ private:
     void init();
     String message;
     String savedMessage;
+    int sn_;
     int pitch_;
     int roll_;
     int yaw_;

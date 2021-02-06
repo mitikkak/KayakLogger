@@ -1,6 +1,8 @@
 
 struct SpeedMessage
 {
+    SpeedMessage(): header{}, value{0.0f} {}
+    SpeedMessage(const double v) : header{}, value{v} {}
     char* header;
     double value;
 };

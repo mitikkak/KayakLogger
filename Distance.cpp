@@ -10,9 +10,9 @@ using namespace std;
 static const unsigned int GPS_MEASUREMENT_PERIOD_SECONDS = GPS_MEASUREMENT_PERIOD/1000;
 static const double GPS_MEASUREMENT_PERIOD_HOURS = static_cast<float>(GPS_MEASUREMENT_PERIOD_SECONDS)/3600;
 
-void Distance::add(const double& speed)
+void Distance::add(const double& speed, unsigned const measPeriodMillisecs)
 {
-    const double measPeriodHours = static_cast<double>(GPS_MEASUREMENT_PERIOD_SECONDS)/3600;
+    const double measPeriodHours = static_cast<double>(measPeriodMillisecs)/1000/3600;
     v += (speed*(measPeriodHours));
 }
 bool Distance::write(Logger& logger) const

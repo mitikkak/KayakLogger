@@ -9,7 +9,7 @@ private:
 public:
     Distance(): v(0.0){}
     double value() const {return v;};
-    void add(const double& speed);
+    void add(const double& speed, unsigned const measPeriodMillisecs);
     bool write(Logger& logger) const;
 };
 

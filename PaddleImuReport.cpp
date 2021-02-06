@@ -5,6 +5,7 @@ const String PaddleImuReport::separator{";"};
 PaddleImuReport::PaddleImuReport()
 : message{},
   savedMessage{},
+  sn_{},
   pitch_{},
   roll_{},
   yaw_{}
@@ -23,7 +24,7 @@ void PaddleImuReport::push(const String& s)
 void PaddleImuReport::write(Logger& logger)
 {
     message += "\n";
-    logger.logMessage(message);
+    //logger.logMessage(message);
     savedMessage = message;
     init();
 }
@@ -34,14 +35,17 @@ void PaddleImuReport::decodeAngularPosition()
         return;
     }
     char* str = const_cast<char*>(savedMessage.c_str());
-    const char* pch = strtok (str,";");
+    const char* pch = strtok (str,separator.c_str());
     int i = 0;
     while (pch != NULL)
     {
       //printf ("%p, %s\n",pch, pch);
-      pch = strtok (NULL,";");
+      pch = strtok (NULL,separator.c_str());
       if (i == 0) { } // millis of sender, do nothing
-      else if (i == 1) { } // sn, do nothing
+      else if (i == 1)
+      {
+          sn_ = atoi(pch);
+      }
       else if (i == 2)
       { // pitch
           //Serial.printf("Pitch: %s \n\r", pch);

@@ -54,12 +54,9 @@ extern const char* const password;
 extern const char* const mdnsHost;
 #include "AsyncWebServerWrapper.h"
 extern AsyncWebServerWrapper server;
-#ifdef PADDLE_IMU
-
 
 extern AsyncUDP udp;
 extern uint32_t numOfMsgs;
 
 #include "PaddleImuReport.h"
 extern PaddleImuReport paddleImuReport;
-#endif //PADDLE_IMU

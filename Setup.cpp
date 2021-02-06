@@ -69,14 +69,30 @@ void createMdns()
     delay(3000);
 }
 
- const int contrast{60}; // ESP8266 dev unit
-//const int contrast{50}; // ESP32 finished unit
+void createPaddleImuListener()
+{
+    if(udp.listen(1234))
+    {
+        lcd.print("PaddleImu listener created");
+        //lcd.print(String(WiFi.localIP()));
+        udp.onPacket([](AsyncUDPPacket packet) {
+            //Serial.printf("udpPacketReceiver[%llu] %u \n\r", millis(), numOfMsgs);
+            paddleImuReport.push(String((const char*) packet.data()));
+            paddleImuReport.write(logger);
+            numOfMsgs++;
+        });
+
+    }
+}
+// const int contrast{60}; // ESP8266 dev unit
+const int contrast{50}; // ESP32 finished unit
 
 void setup()
 {
   Serial.begin(9600);
   gps.baudrateTo115200();
-  gps.periodTo5000ms();
+  //gps.periodTo5000ms();
+  gps.periodTo100ms();
 
   lcd.begin(contrast);
   lcd.upsideDown();
@@ -88,26 +104,14 @@ void setup()
   delay(100);
   logger.initSdCard(lcd);
   delay(100);
-  server.create();
-  server.waitUntilConnectionServed(lcd);
-  server.destroy();
-#ifdef PADDLE_IMU
-  createWifiAp();
-  if(udp.listen(1234))
-  {
-      lcd.print("UDP Listening on IP: ");
-      lcd.print(String(WiFi.localIP()));
-      udp.onPacket([](AsyncUDPPacket packet) {
-          //Serial.printf("udpPacketReceiver[%llu] %u \n\r", millis(), numOfMsgs);
-          paddleImuReport.push(String((const char*) packet.data()));
-          paddleImuReport.write(logger);
-          numOfMsgs++;
-      });
-
-  }
+//  server.create();
+//  server.waitUntilConnectionServed(lcd);
+//  server.destroy();
+  createPaddleImuListener();
   delay(3000);
+  //waitUntilGpsFix();
+  //logger.reserveFile(); // After 3d fix we supposedly have proper date and time
+  gps.setMinimumNmeaSentences();
   lcd.clear();
-#endif
-  waitUntilGpsFix();
-  logger.reserveFile(); // After 3d fix we supposedly have proper date and time
+  lcd.bigText();
 }
