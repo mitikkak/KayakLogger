@@ -104,13 +104,13 @@ void setup()
   delay(100);
   logger.initSdCard(lcd);
   delay(100);
-//  server.create();
-//  server.waitUntilConnectionServed(lcd);
-//  server.destroy();
+  server.create();
+  server.waitUntilConnectionServed();
+  server.destroy();
   createPaddleImuListener();
   delay(3000);
-  //waitUntilGpsFix();
-  //logger.reserveFile(); // After 3d fix we supposedly have proper date and time
+  waitUntilGpsFix();
+  logger.reserveFile(); // After 3d fix we supposedly have proper date and time
   gps.setMinimumNmeaSentences();
   lcd.clear();
   lcd.bigText();

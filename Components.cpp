@@ -50,4 +50,4 @@ const char* const mdnsHost = "kayaklogger";
 AsyncUDP udp;
 uint32_t numOfMsgs{0};
 PaddleImuReport paddleImuReport;
-AsyncWebServerWrapper server;
+AsyncWebServerWrapper server(lcd);

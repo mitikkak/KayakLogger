@@ -5,8 +5,11 @@ class LcdIf;
 class AsyncWebServerWrapper
 {
 public:
-    AsyncWebServerWrapper();
+    AsyncWebServerWrapper(LcdIf& lcd_);
     void create();
-    void waitUntilConnectionServed(LcdIf& lcd);
+    void waitUntilConnectionServed();
     void destroy();
+private:
+    void beginOta();
+    LcdIf& lcd;
 };

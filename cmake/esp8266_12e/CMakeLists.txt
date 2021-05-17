@@ -33,6 +33,7 @@ set(sources
     ${esp_async_web_server_sources}
     ${esp_async_tcp_sources}
     ${esp8266_mdns_sources}
+    ${esp8266_ota_sources}
 )
 
 add_executable(${PROJECT_NAME} ${sources} ${adafruit_lcd_esp8266_sources})
@@ -62,6 +63,7 @@ target_include_directories(
     ${ESP_ASYNC_TCP_DIR}
     ${HASH_ESP8266_DIR}
     ${MDNS_ESP8266_DIR}
+    ${OTA_ESP8266_DIR}
 )
 
 elf_to_bin_esp8266_12e(${PROJECT_NAME})

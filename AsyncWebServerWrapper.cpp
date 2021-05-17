@@ -9,6 +9,7 @@
 #ifndef ESP8266_OLD_ARDUINO_USED
 #include "SdWrapper.h"
 #endif
+#include "ArduinoOTA.h"
 
 static const int server_port = 80;
 AsyncWebServer serverImpl(server_port);
@@ -114,7 +115,8 @@ void handleDisconnect(AsyncWebServerRequest* request) {
 
 }
 
-AsyncWebServerWrapper::AsyncWebServerWrapper()
+AsyncWebServerWrapper::AsyncWebServerWrapper(LcdIf& lcd_)
+: lcd(lcd_)
 {
 
 }
@@ -125,8 +127,34 @@ void AsyncWebServerWrapper::create()
     serverImpl.on("/disconnect", handleDisconnect);
     serverImpl.on("/deleteFirst", handleDelete);
     serverImpl.begin();
+    beginOta();
 }
-void AsyncWebServerWrapper::waitUntilConnectionServed(LcdIf& lcd)
+void AsyncWebServerWrapper::beginOta()
+{
+    ArduinoOTA.onStart([]() {
+    });
+    ArduinoOTA.onEnd([]() {
+    });
+    ArduinoOTA.onProgress([this](unsigned int progress, unsigned int total) {
+      lcd.clear();
+      const unsigned int percentage = (progress / (total / 100));
+      lcd.printer().print(percentage);
+      lcd.display();
+    });
+    ArduinoOTA.onError([this](ota_error_t error) {
+      lcd.clear();
+      lcd.printer().print("OTA Error: ");
+      lcd.printer().print(error);
+      lcd.display();
+      //if (error == OTA_AUTH_ERROR) Serial.println("Auth Failed");
+      //else if (error == OTA_BEGIN_ERROR) Serial.println("Begin Failed");
+      //else if (error == OTA_CONNECT_ERROR) Serial.println("Connect Failed");
+      //else if (error == OTA_RECEIVE_ERROR) Serial.println("Receive Failed");
+      //else if (error == OTA_END_ERROR) Serial.println("End Failed");
+    });
+    ArduinoOTA.begin();
+}
+void AsyncWebServerWrapper::waitUntilConnectionServed()
 {
     serverFinished = false;
     serverAccessed = false;
@@ -145,6 +173,7 @@ void AsyncWebServerWrapper::waitUntilConnectionServed(LcdIf& lcd)
             lcd.print("accessed");
         }
         delay(1000);
+        ArduinoOTA.handle();
         if (serverFinished) { break; }
     }
     while(deltaTime < 60 or serverAccessed);

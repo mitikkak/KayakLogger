@@ -30,6 +30,8 @@ set(ext_sources
     ${esp_async_web_server_sources}
     ${esp32_async_tcp_sources}
     ${esp32_mdns_sources}
+    ${esp32_ota_sources}
+    ${esp32_update_sources}
 )
 
 set(EXT_SRC_DIR
@@ -41,6 +43,8 @@ set(EXT_SRC_DIR
     ${ESP32_ASYNC_UDP_SRC_DIR}
     ${ESP32_MDNS_SRC_DIR}
     ${ESP32_ASYNC_TCP_DIR}
+    ${ESP32_OTA_SRC_DIR}
+    ${ESP32_UPDATE_SRC_DIR}
     ${ESP_ASYNC_WEB_SERVER_DIR}
     ${GFX_SRC}
     ${PCD8544_ESP32_SRC}
