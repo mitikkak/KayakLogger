@@ -2,13 +2,14 @@
 #ifndef _ELEMENT_QUEUE_H
 #define _ELEMENT_QUEUE_H
 #include "fstream_headers.h"
+#include "Arduino.h"
 
 struct Element
 {
   explicit Element(const char *p_msg);
   ~Element();
   const char *msg;
-#if defined ESP8266 || defined ESP32
+#if defined ESP8266 || defined ESP32 || defined UNIT_TEST
   virtual void outputValue(String& str) const = 0;
 #else
   virtual void outputValue(ofstream& sdlog) const = 0;
@@ -19,7 +20,7 @@ template <class TYPE>
 struct LogElement : public Element
 {
   explicit LogElement(const char *p_msg, TYPE const val, unsigned const int prc = 0);
-#if defined ESP8266 || defined ESP32
+#if defined ESP8266 || defined ESP32 || defined UNIT_TEST
   void outputValue(String& str) const;
 #else
   void outputValue(ofstream& sdlog) const;

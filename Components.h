@@ -40,7 +40,9 @@ extern Logger logger;
 extern AverageSpeed averageSpeed;
 #include "Distance.h"
 extern Distance distance_;
-#ifdef ESP32
+
+#if not defined UNIT_TEST
+#if defined ESP32
 #include "WiFi.h"
 #include "AsyncUDP.h"
 #include "ESPmDNS.h"
@@ -56,6 +58,9 @@ extern const char* const mdnsHost;
 extern AsyncWebServerWrapper server;
 
 extern AsyncUDP udp;
+
+#endif // UNIT_TEST for all WIFI stuff
+
 extern uint32_t numOfMsgs;
 
 #include "PaddleImuReport.h"

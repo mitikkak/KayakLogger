@@ -53,3 +53,12 @@ void LcdIf::separator()
 {
     print("|");
 }
+void LcdIf::fillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
+{
+    lcdImpl.fillRect(x, y, w, h, color);
+}
+int16_t LcdIf::width()
+{
+    return lcdImpl.width();
+}
+

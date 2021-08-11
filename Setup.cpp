@@ -46,11 +46,12 @@ void createWifiAp()
 {
     lcd.clear();
     lcd.smallText();
+    WiFi.mode(WIFI_AP);
     WiFi.softAP(ssid, password);
+    delay(3000);
     lcd.print("AP: ");
     lcd.row(1);
     lcd.print(ssid);
-    delay(3000);
 }
 
 void createMdns()
@@ -78,7 +79,9 @@ void createPaddleImuListener()
         udp.onPacket([](AsyncUDPPacket packet) {
             //Serial.printf("udpPacketReceiver[%llu] %u \n\r", millis(), numOfMsgs);
             paddleImuReport.push(String((const char*) packet.data()));
-            paddleImuReport.write(logger);
+            paddleImuReport.write(/*logger*/);
+            paddleImuReport.decodeAngularPosition();
+            paddleImuReport.calculateTimeOnSide();
             numOfMsgs++;
         });
 
@@ -101,17 +104,17 @@ void setup()
   delay(1000);
   createWifiAp();
   createMdns();
-  delay(100);
-  logger.initSdCard(lcd);
+  delay(1000);
+  //logger.initSdCard(lcd);
   delay(100);
   server.create();
   server.waitUntilConnectionServed();
   server.destroy();
   createPaddleImuListener();
   delay(3000);
-  waitUntilGpsFix();
-  logger.reserveFile(); // After 3d fix we supposedly have proper date and time
-  gps.setMinimumNmeaSentences();
+  //waitUntilGpsFix();
+  //logger.reserveFile(); // After 3d fix we supposedly have proper date and time
+  //gps.setMinimumNmeaSentences();
   lcd.clear();
   lcd.bigText();
 }

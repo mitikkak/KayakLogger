@@ -23,7 +23,8 @@ class ScreenSelector
 public:
     enum Type {velocity, time_and_distance, gps_status};
     ScreenSelector()
-    : currentStatus{unstable},
+    : prevTimeUpdated{0},
+      currentStatus{unstable},
       goodStatus{0},
       listIdx{0},
       unstableList{time_and_distance, velocity,
@@ -62,12 +63,19 @@ public:
 private:
     void updateListIndex()
     {
-        listIdx++;
+        static unsigned long updatePeriod{5000};
+        const unsigned long timeNow = millis();
+        if (timeNow >= (prevTimeUpdated + updatePeriod))
+        {
+            listIdx++;
+            prevTimeUpdated = timeNow;
+        }
         if (listIdx >= numOf)
         {
             listIdx = 0;
         }
     }
+    unsigned long prevTimeUpdated;
     enum status {unstable, stable};
     status currentStatus;
     unsigned int listIdx;
@@ -90,7 +98,7 @@ bool timeToLog(unsigned long timeNow)
 unsigned long prevTimeRefreshed{0};
 bool timeToRefreshScreen(unsigned long timeNow)
 {
-    static const unsigned long SCREEN_REFRESH_PERIOD{5000};
+    static const unsigned long SCREEN_REFRESH_PERIOD{200};
     return (timeNow - prevTimeRefreshed > SCREEN_REFRESH_PERIOD);
 }
 bool timeToRefreshScreen_paddleImu(unsigned long timeNow)
@@ -101,9 +109,7 @@ bool timeToRefreshScreen_paddleImu(unsigned long timeNow)
 double totalDistance{0.0f};
 double totalDistanceWithSpeed{0.0f};
 double totalSpeed{0.0f};
-double highestSpeed{0.0f};
-const double lowestSpeedInitValue{99.0f};
-double lowestSpeed{lowestSpeedInitValue};
+double currentSpeed{0.0f};
 unsigned long prevTimeSpeedCalculated{0};
 unsigned int numOfMessages{0};
 
@@ -111,12 +117,16 @@ bool paddleImuConnected()
 {
     return (numOfMsgs > 0);
 }
+
 void paddleImuLogging()
 {
     unsigned long timeNow = millis();
     if (timeToRefreshScreen_paddleImu(timeNow))
     {
+#if 0
         paddleImuReport.decodeAngularPosition();
+        paddleImuReport.calculateTimeOnSide();
+#endif
         lcd.clear();
         lcd.row(0);
         //lcd.smallText();
@@ -124,15 +134,33 @@ void paddleImuLogging()
 //        lcd.row(1);
 //        lcd.printer().print(paddleImuReport.sn());
 //        lcd.row(2);
-        lcd.printer().print(paddleImuReport.pitch());
-        lcd.row(1);
+//        lcd.printer().print(paddleImuReport.pitch());
+//        lcd.printer().print(paddleImuReport.yaw());
+//        lcd.row(2);
         lcd.printer().print(paddleImuReport.roll());
+        lcd.row(1);
+        lcd.printer().print(paddleImuReport.getSideStr());
         lcd.row(2);
-        lcd.printer().print(paddleImuReport.yaw());
+        if (paddleImuReport.getSide() == PaddleSide::center)
+        {
+            lcd.printer().print(paddleImuReport.getLeftToRightRatio());
+        }
+        else
+        {
+            lcd.printer().print(paddleImuReport.getTimeOnSide());
+        }
         prevTimeRefreshed = timeNow;
         lcd.display();
         numOfMsgs = 0;
     }
+}
+void printSpeeBar(const int row)
+{
+    uint8_t const color = 1;
+    double const topSpeed{13.0f};
+    double const ratio = currentSpeed/topSpeed;
+    int const barLength = static_cast<double>(lcd.width())*ratio;
+    lcd.fillRect(0, row, barLength, 10, color);
 }
 void normalLogging()
 {
@@ -140,34 +168,6 @@ void normalLogging()
     GpsReport gpsReport(gps);
     TinyGPSPlus::EncodeStatus const encodeStatus = gps.readSerialGiveStatus();
     // Purpose is to not log during GPS's  burst of sentences
-  #if 0
-    if (encodeStatus == TinyGPSPlus::EncodeStatus::GGA and
-        gpsGoodStatus())
-    {
-        if (prevTimeSpeedCalculated)
-        {
-            numOfMessages++;
-            double const deltaTimeInHours = static_cast<double>(timeNow - prevTimeSpeedCalculated) / 1000 / 60 / 60;
-            totalSpeed += gps.speed.kmph();
-            double const distanceWithSpeed = (gps.speed.kmph() * deltaTimeInHours) * 1000;
-            totalDistanceWithSpeed += distanceWithSpeed;
-        }
-        prevTimeSpeedCalculated = timeNow;
-    }
-    if (timeToLog(timeNow))
-    {
-        timesLogged++;
-        prevTimeLogged = timeNow;
-        lcd.clear();
-        lcd.printer().print(totalDistanceWithSpeed, 7);
-        lcd.row(1);
-        double const averageSpeed = (numOfMessages) ? (totalSpeed / numOfMessages) : 0.0f;
-        lcd.printer().print(averageSpeed, 7);
-        lcd.row(2);
-        lcd.printer().print(timesLogged);
-        lcd.display();
-    }
-  #else
     if (encodeStatus == TinyGPSPlus::EncodeStatus::GGA and
         gpsGoodStatus())
     {
@@ -176,8 +176,7 @@ void normalLogging()
         //if (timeToLog(timeNow)) // TODO: deltaTime
         {
             SpeedMessage const speed{gps.speed.kmph()};
-            if (speed.value > highestSpeed) { highestSpeed = speed.value; }
-            if (speed.value < lowestSpeed) { lowestSpeed = speed.value; }
+            currentSpeed = speed.value;
             averageSpeed.add(speed.value);
             //const bool averageSpeedStatus = averageSpeed.write(logger);
             distance_.add(speed.value, deltaTime);
@@ -192,13 +191,13 @@ void normalLogging()
         screenSelector.update();
         if (screenSelector.get() == ScreenSelector::velocity)
         {
-            lcd.printer().print(lowestSpeed, 1);
-            lcd.row(1);
-            lcd.printer().print(highestSpeed, 1);
+            lcd.printer().print(currentSpeed, 1);
+            //lcd.row(1);
+            const int row{18};
+            printSpeeBar(row);
+            //lcd.printer().print(highestSpeed, 1);
             lcd.row(2);
             lcd.printer().print(averageSpeed.value(), 3);
-            highestSpeed = 0.0f;
-            lowestSpeed = lowestSpeedInitValue;
         }
         else if (screenSelector.get() == ScreenSelector::time_and_distance)
         {
@@ -216,19 +215,6 @@ void normalLogging()
             lcd.row(1);
             lcd.printer().print(gps.hdop.hdop());
         }
-        //else if (screenSelector.get() == ScreenSelector::gps_status)
-        //{
-        //    lcd.printer().print(gps.satsInView.numOfDb());
-        //    lcd.printer().print(":");
-        //    lcd.printer().print(gps.satsInView.totalSnr());
-        //    lcd.row(1);
-        //    lcd.printer().print(gps.gsa.fix());
-        //    lcd.printer().print(":");
-        //    lcd.print(String(gps.gsa.numSats()));
-        //    lcd.row(2);
-        //    lcd.printer().print(gps.gsa.hdop());
-        //}
-  #endif
       lcd.display();
     }
 }
@@ -240,6 +226,6 @@ void loop()
     }
     else
     {
-        normalLogging();
+        //normalLogging();
     }
 }

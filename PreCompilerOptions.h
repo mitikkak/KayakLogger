@@ -2,6 +2,6 @@
 #define _PRE_COMPILER_OPTIONS_H
 
 #define GPS_MEASUREMENT_PERIOD 5000
-//#define RELEASE_BOARD
+#define RELEASE_BOARD
 
 #endif

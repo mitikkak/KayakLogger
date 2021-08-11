@@ -1,6 +1,6 @@
 
 #include "Arduino.h"
-#include <string>
+#include <cstring>
 
 long Arduino::timeNow = 0;
 void pinMode(const int pin, const int mode)

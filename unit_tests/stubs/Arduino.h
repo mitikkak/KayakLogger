@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include <string.h>
+#include <string>
 void pinMode(const int pin, const int mode);
 namespace Arduino {
 extern long timeNow;
@@ -24,3 +24,4 @@ static const int A3 = 93;
 static constexpr int DEC{3};
 
 char *itoa(int val, char *s, int radix);
+typedef std::string String;

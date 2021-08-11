@@ -1,12 +1,14 @@
 
 #ifndef _LOGGER_H
 #define _LOGGER_H
-
+#include "Arduino.h"
 #include "ElementQueue.h"
 #if defined ESP8266
 typedef struct SDClass SD_TYPE;
 #elif defined ESP32
 typedef struct fs::SDFS SD_TYPE;
+#else
+typedef struct SdFat SD_TYPE;
 #endif
 
 class LcdIf;
