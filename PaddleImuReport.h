@@ -5,7 +5,8 @@
 
 enum class PaddleSide
 {
-    center = 1,
+   // center = 1,
+    init = 1,
     left = 2,
     right = 3
 };
@@ -25,9 +26,12 @@ public:
     void calculateTimeOnSide();
     PaddleSide getSide() const;
     String getSideStr() const;
+    void resetSide();
     unsigned long getTimeOnSide() const { return timeOnSide; };
     unsigned long getTimeOnSideStart() const { return timeOnSideStart; }
     double getLeftToRightRatio() const;
+    unsigned long getTotalTimeOnLeft() const { return totalTimeOnLeft; }
+    unsigned long getTotalTimeOnRight() const { return totalTimeOnRight; }
 private:
     bool onRightside() const;
     bool onLeftside() const;

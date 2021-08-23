@@ -10,7 +10,7 @@ PaddleImuReport::PaddleImuReport()
   pitch_{},
   roll_{},
   yaw_{},
-  prevSide{PaddleSide::center},
+  prevSide{PaddleSide::init},
   timeOnSideStart{0},
   timeOnSide{0},
   totalTimeOnLeft{0},
@@ -77,7 +77,7 @@ void PaddleImuReport::decodeAngularPosition()
 }
 PaddleSide PaddleImuReport::getSide() const
 {
-    PaddleSide retVal{PaddleSide::center};
+    PaddleSide retVal{PaddleSide::init};
     if (onLeftside())
     {
         retVal = PaddleSide::left;
@@ -103,7 +103,7 @@ String PaddleImuReport::getSideStr() const
 }
 bool PaddleImuReport::onLeftside() const
 {
-    if (roll() > 180 and roll() < 360)
+    if (roll() > 180 and roll() <= 360)
     {
         return true;
     }
@@ -111,7 +111,7 @@ bool PaddleImuReport::onLeftside() const
 }
 bool PaddleImuReport::onRightside() const
 {
-    if (roll() > 1 and roll() <= 180)
+    if (roll() >= 0 and roll() <= 180)
     {
         return true;
     }
@@ -121,6 +121,11 @@ double PaddleImuReport::getLeftToRightRatio() const
 {
     if (not totalTimeOnRight) { return 0.0; }
     return static_cast<double>(totalTimeOnLeft)/static_cast<double>(totalTimeOnRight);
+}
+void PaddleImuReport::resetSide()
+{
+    totalTimeOnLeft = 0;
+    totalTimeOnRight = 0;
 }
 #if 0
 void PaddleImuReport::calculateTimeOnSide()
@@ -150,12 +155,12 @@ void PaddleImuReport::calculateTimeOnSide()
     if (side != prevSide)
     {
         timeOnSide = timeNow - timeOnSideStart;
-        timeOnSideStart = timeNow;
-        if (prevSide != PaddleSide::center)
+        if (prevSide != PaddleSide::init)
         {
             unsigned long& totalTimeOnSide = (prevSide == PaddleSide::left) ? totalTimeOnLeft : totalTimeOnRight;
             totalTimeOnSide += timeOnSide;
         }
+        timeOnSideStart = timeNow;
     }
     prevSide = side;
 }

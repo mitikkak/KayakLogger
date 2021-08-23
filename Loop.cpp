@@ -118,6 +118,10 @@ bool paddleImuConnected()
     return (numOfMsgs > 0);
 }
 
+unsigned long prevTimeStats{0};
+const unsigned long STATS_INTERVAL{30000};
+const unsigned long STATS_DURATION{2000};
+
 void paddleImuLogging()
 {
     unsigned long timeNow = millis();
@@ -139,15 +143,16 @@ void paddleImuLogging()
 //        lcd.row(2);
         lcd.printer().print(paddleImuReport.roll());
         lcd.row(1);
-        lcd.printer().print(paddleImuReport.getSideStr());
+        lcd.printer().print(paddleImuReport.getTimeOnSide());
         lcd.row(2);
-        if (paddleImuReport.getSide() == PaddleSide::center)
+        lcd.printer().print(paddleImuReport.getLeftToRightRatio());
+        if (timeNow - prevTimeStats >= STATS_INTERVAL)
         {
-            lcd.printer().print(paddleImuReport.getLeftToRightRatio());
+            prevTimeStats = timeNow;
+            paddleImuReport.resetSide();
         }
         else
         {
-            lcd.printer().print(paddleImuReport.getTimeOnSide());
         }
         prevTimeRefreshed = timeNow;
         lcd.display();
