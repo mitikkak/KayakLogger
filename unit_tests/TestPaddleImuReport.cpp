@@ -78,7 +78,6 @@ TEST_F(TestPaddleImuReport, calculateTimeOnSide_leftToCenterToRightEqualsOneStro
     EXPECT_EQ(2100, r.getTimeOnSideStart());
     EXPECT_EQ(2100, r.getTotalTimeOnLeft());
 }
-#endif
 TEST_F(TestPaddleImuReport, calculateTimeOnSide_leftToRightOneStroke)
 {
     Arduino::timeNow = 1000;
@@ -122,4 +121,34 @@ TEST_F(TestPaddleImuReport, calculateTimeOnSide_rightToLeftOneStroke)
     EXPECT_EQ(1600, r.getTimeOnSideStart());
     EXPECT_EQ(600, r.getTotalTimeOnRight());
     EXPECT_EQ(0, r.getTotalTimeOnLeft());
+}
+#endif
+TEST_F(TestPaddleImuReport, positions)
+{
+	Tilt const leftCatch{-50,-90};
+	Tilt const leftStroke{-50,-40};
+	Tilt const leftExit{-50,-10};
+	Tilt const rightCatch{-30,45};
+	Tilt const rightExit{-10,10};
+	r.setLimits(leftCatch, leftStroke, leftExit, rightCatch, rightExit);
+	inputOneMessage("0;0;0;0;0");
+	EXPECT_EQ(Position::transit, r.updatePosition());
+	inputOneMessage("0;0;-40;-70;0");
+	EXPECT_EQ(Position::transit, r.updatePosition());
+	inputOneMessage("0;0;-40;-80;0");
+	EXPECT_EQ(Position::leftCatch, r.updatePosition());
+	inputOneMessage("0;0;-50;-90;0");
+	EXPECT_EQ(Position::leftCatch, r.updatePosition());
+	inputOneMessage("0;0;-30;-60;0");
+	EXPECT_EQ(Position::leftStroke, r.updatePosition());
+	inputOneMessage("0;0;-40;-21;0");
+	EXPECT_EQ(Position::leftStroke, r.updatePosition());
+	inputOneMessage("0;0;-45;-20;0");
+	EXPECT_EQ(Position::leftExit, r.updatePosition());
+	inputOneMessage("0;0;-40;-10;0");
+	EXPECT_EQ(Position::leftExit, r.updatePosition());
+	inputOneMessage("0;0;-40;1;0");
+	EXPECT_EQ(Position::traverseRight, r.updatePosition());
+#if 0
+#endif
 }

@@ -10,11 +10,17 @@ PaddleImuReport::PaddleImuReport()
   pitch_{},
   roll_{},
   yaw_{},
-  prevSide{PaddleSide::init},
+  prevSide{PaddleSide::right},
   timeOnSideStart{0},
   timeOnSide{0},
   totalTimeOnLeft{0},
-  totalTimeOnRight{0}
+  totalTimeOnRight{0},
+  leftCatch{},
+  leftStroke{},
+  leftExit{},
+  rightCatch{},
+  rightExit{},
+  prevPos{Position::transit}
 {
 }
 void PaddleImuReport::init()
@@ -77,46 +83,46 @@ void PaddleImuReport::decodeAngularPosition()
 }
 PaddleSide PaddleImuReport::getSide() const
 {
-    PaddleSide retVal{PaddleSide::init};
+    PaddleSide retVal{PaddleSide::right};
     if (onLeftside())
     {
         retVal = PaddleSide::left;
     }
-    else if (onRightside())
-    {
-        retVal = PaddleSide::right;
-    }
+//    else if (onRightside())
+//    {
+//        retVal = PaddleSide::right;
+//    }
     return retVal;
 }
 String PaddleImuReport::getSideStr() const
 {
-    String retVal = "C";
+    String retVal = "R";
     if (onLeftside())
     {
         retVal = "L";
     }
-    else if (onRightside())
-    {
-        retVal = "R";
-    }
+//    else if (onRightside())
+//    {
+//        retVal = "R";
+//    }
     return retVal;
 }
 bool PaddleImuReport::onLeftside() const
 {
-    if (roll() > 180 and roll() <= 360)
+    if (roll() < 0 and roll() >= -180)
     {
         return true;
     }
     return false;
 }
-bool PaddleImuReport::onRightside() const
-{
-    if (roll() >= 0 and roll() <= 180)
-    {
-        return true;
-    }
-    return false;
-}
+//bool PaddleImuReport::onRightside() const
+//{
+//    if (roll() >= 0 and roll() <= 180)
+//    {
+//        return true;
+//    }
+//    return false;
+//}
 double PaddleImuReport::getLeftToRightRatio() const
 {
     if (not totalTimeOnRight) { return 0.0; }
@@ -155,7 +161,7 @@ void PaddleImuReport::calculateTimeOnSide()
     if (side != prevSide)
     {
         timeOnSide = timeNow - timeOnSideStart;
-        if (prevSide != PaddleSide::init)
+        //if (prevSide != PaddleSide::init)
         {
             unsigned long& totalTimeOnSide = (prevSide == PaddleSide::left) ? totalTimeOnLeft : totalTimeOnRight;
             totalTimeOnSide += timeOnSide;
@@ -165,4 +171,51 @@ void PaddleImuReport::calculateTimeOnSide()
     prevSide = side;
 }
 #endif
-
+void PaddleImuReport::setLimits(const Tilt& _leftCatch, const Tilt& _leftStroke, const Tilt& _leftExit, const Tilt& _rightCatch, const Tilt& _rightExit)
+{
+	leftCatch = _leftCatch;
+	leftStroke = _leftStroke;
+	leftExit = _leftExit;
+	rightCatch = _rightCatch;
+	rightExit = _rightExit;
+}
+bool PaddleImuReport::isWithin(const Tilt& tilt, const Tilt& candidate, const int limit) const
+{
+	bool const retVal = ((tilt.roll >= candidate.roll) and (tilt.roll - candidate.roll <= limit))
+    	    	    or ((candidate.roll > tilt.roll) and (candidate.roll - tilt.roll <= limit));
+	//printf("retVal: %u [%d][%d] \n", retVal, tilt.roll, candidate.roll);
+	return retVal;
+}
+Position PaddleImuReport::updatePosition()
+{
+    Tilt const tilt{pitch(), roll()};
+    if (prevPos == Position::transit)
+    {
+    	if (isWithin(tilt, leftCatch, 10))
+    	{
+    		prevPos = Position::leftCatch;
+    	}
+    }
+    else if (prevPos == Position::leftCatch)
+    {
+    	if (isWithin(tilt, leftStroke, 20))
+    	{
+    		prevPos = Position::leftStroke;
+    	}
+    }
+    else if (prevPos == Position::leftStroke)
+    {
+    	if (isWithin(tilt, leftExit, 10))
+    	{
+    		prevPos = Position::leftExit;
+    	}
+    }
+    else if (prevPos == Position::leftExit)
+    {
+    	if (not isWithin(tilt, leftExit, 10))
+    	{
+    		prevPos = Position::traverseRight;
+    	}
+    }
+	return prevPos;
+}
