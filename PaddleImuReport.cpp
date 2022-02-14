@@ -19,8 +19,10 @@ PaddleImuReport::PaddleImuReport()
   leftStroke{},
   leftExit{},
   rightCatch{},
+  rightStroke{},
   rightExit{},
-  prevPos{Position::transit}
+  currPos{Position::unknown},
+  prevTimePosUpdated{0}
 {
 }
 void PaddleImuReport::init()
@@ -171,51 +173,104 @@ void PaddleImuReport::calculateTimeOnSide()
     prevSide = side;
 }
 #endif
-void PaddleImuReport::setLimits(const Tilt& _leftCatch, const Tilt& _leftStroke, const Tilt& _leftExit, const Tilt& _rightCatch, const Tilt& _rightExit)
+void PaddleImuReport::setLimits(const Tilt& _leftCatch, const Tilt& _leftStroke, const Tilt& _leftExit, const Tilt& _rightCatch, const Tilt& _rightStroke, const Tilt& _rightExit)
 {
 	leftCatch = _leftCatch;
 	leftStroke = _leftStroke;
 	leftExit = _leftExit;
 	rightCatch = _rightCatch;
+	rightStroke = _rightStroke;
 	rightExit = _rightExit;
 }
-bool PaddleImuReport::isWithin(const Tilt& tilt, const Tilt& candidate, const int limit) const
+bool PaddleImuReport::isWithin(const Tilt& tilt, const Tilt& candidate) const
 {
+	const int limit = candidate.limit;
 	bool const retVal = ((tilt.roll >= candidate.roll) and (tilt.roll - candidate.roll <= limit))
     	    	    or ((candidate.roll > tilt.roll) and (candidate.roll - tilt.roll <= limit));
 	//printf("retVal: %u [%d][%d] \n", retVal, tilt.roll, candidate.roll);
 	return retVal;
 }
-Position PaddleImuReport::updatePosition()
+void PaddleImuReport::updatePosition()
 {
-    Tilt const tilt{pitch(), roll()};
-    if (prevPos == Position::transit)
+	unsigned long timeNow = millis();
+	unsigned long const positionLostThreshold{1000};
+    Tilt const tilt{pitch(), roll(), 0};
+    Position const prevPos{currPos};
+    if (currPos == Position::unknown)
     {
-    	if (isWithin(tilt, leftCatch, 10))
+    	if (isWithin(tilt, leftCatch))
     	{
-    		prevPos = Position::leftCatch;
+    		currPos = Position::leftCatch;
+    	}
+    	else if (isWithin(tilt, rightCatch))
+    	{
+    		currPos = Position::rightCatch;
     	}
     }
-    else if (prevPos == Position::leftCatch)
+    else if (currPos == Position::leftCatch)
     {
-    	if (isWithin(tilt, leftStroke, 20))
+    	if (isWithin(tilt, leftStroke))
     	{
-    		prevPos = Position::leftStroke;
+    		currPos = Position::leftStroke;
     	}
     }
-    else if (prevPos == Position::leftStroke)
+    else if (currPos == Position::leftStroke)
     {
-    	if (isWithin(tilt, leftExit, 10))
+    	if (isWithin(tilt, leftExit))
     	{
-    		prevPos = Position::leftExit;
+    		currPos = Position::leftExit;
     	}
     }
-    else if (prevPos == Position::leftExit)
+    else if (currPos == Position::leftExit)
     {
-    	if (not isWithin(tilt, leftExit, 10))
+    	if (not isWithin(tilt, leftExit))
     	{
-    		prevPos = Position::traverseRight;
+    		currPos = Position::traverseRight;
+    		stats.strokesLeft++;
     	}
     }
-	return prevPos;
+    else if (currPos == Position::traverseRight)
+    {
+    	if (isWithin(tilt, rightCatch))
+    	{
+    		currPos = Position::rightCatch;
+    	}
+    }
+    else if (currPos == Position::rightCatch)
+    {
+    	if (isWithin(tilt, rightStroke))
+    	{
+    		currPos = Position::rightStroke;
+    	}
+    }
+    else if (currPos == Position::rightStroke)
+    {
+    	if (isWithin(tilt, rightExit))
+    	{
+    		currPos = Position::rightExit;
+    	}
+    }
+    else if (currPos == Position::rightExit)
+    {
+    	if (not isWithin(tilt, rightExit))
+    	{
+    		currPos = Position::traverseLeft;
+    		stats.strokesRight++;
+    	}
+    }
+    else if (currPos == Position::traverseLeft)
+    {
+    	if (isWithin(tilt, leftCatch))
+    	{
+    		currPos = Position::leftCatch;
+    	}
+    }
+    if (currPos != prevPos)
+    {
+    	prevTimePosUpdated = timeNow;
+    }
+    if ((currPos == prevPos) and (timeNow - prevTimePosUpdated >= positionLostThreshold))
+    {
+    	currPos = Position::unknown;
+    }
 }

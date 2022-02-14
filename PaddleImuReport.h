@@ -13,26 +13,32 @@ enum class PaddleSide
 
 enum class Position
 {
-	transit = 1,
+	unknown = 1,
     leftCatch = 2,
 	leftStroke = 3,
 	leftExit = 4,
 	traverseRight = 5,
+	rightCatch = 6,
+	rightStroke = 7,
+	rightExit = 8,
+	traverseLeft = 9,
 };
 
 class Tilt
 {
 public:
 	Tilt()
-	: pitch{0}, roll{0}
+	: pitch{0}, roll{0}, limit{0}
 	{}
 
-	Tilt(int const _pitch, int const _roll)
+	Tilt(int const _pitch, int const _roll, int const _limit)
 	: pitch{_pitch},
-	  roll{_roll}
+	  roll{_roll},
+	  limit{_limit}
 	{}
 	int pitch;
 	int roll;
+	int limit;
 };
 class PaddleImuReport
 {
@@ -55,12 +61,21 @@ public:
     double getLeftToRightRatio() const;
     unsigned long getTotalTimeOnLeft() const { return totalTimeOnLeft; }
     unsigned long getTotalTimeOnRight() const { return totalTimeOnRight; }
-    void setLimits(const Tilt& _leftCatch, const Tilt& _leftStroke, const Tilt& _leftExit, const Tilt& _rightCatch, const Tilt& _rightExit);
-    Position updatePosition();
+    void setLimits(const Tilt& _leftCatch, const Tilt& _leftStroke, const Tilt& _leftExit, const Tilt& _rightCatch, const Tilt& _rightStroke, const Tilt& _rightExit);
+    void updatePosition();
+    Position getPosition() const { return currPos; }
+    unsigned int numStrokesLeft() const { return stats.strokesLeft; }
+    unsigned int numStrokesRight() const { return stats.strokesRight; }
 private:
+    struct Stats
+	{
+    	Stats(): strokesLeft{0}, strokesRight{0} {}
+    	unsigned int strokesLeft;
+    	unsigned int strokesRight;
+	};
     bool onRightside() const;
     bool onLeftside() const;
-    bool isWithin(const Tilt& tilt, const Tilt& candidate, const int limit) const;
+    bool isWithin(const Tilt& tilt, const Tilt& candidate) const;
     static const String separator;
     String message;
     String savedMessage;
@@ -77,6 +92,10 @@ private:
     Tilt leftStroke;
     Tilt leftExit;
     Tilt rightCatch;
+    Tilt rightStroke;
     Tilt rightExit;
-    Position prevPos;
+    Position currPos;
+    unsigned long prevTimePosUpdated;
+    Stats stats;
+
 };
