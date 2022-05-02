@@ -56,6 +56,7 @@ add_subdirectory(${ARDUINO_CMAKE_DIR}/esp32/core)
 #add_subdirectory(cmake/esp8266)
 add_subdirectory(cmake/esp8266_12e)
 add_subdirectory(cmake/esp_wroom32)
+add_subdirectory(cmake/paddleimu)
 
 #Run cmake with - DCMAKE_BUILD_TYPE = Debug
 add_subdirectory(cmake/ut)

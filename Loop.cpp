@@ -122,38 +122,84 @@ unsigned long prevTimeStats{0};
 const unsigned long STATS_INTERVAL{30000};
 const unsigned long STATS_DURATION{2000};
 
+void delayedStrokeShow(const String& header, const int nextVal, int& prevVal)
+{
+	static int strokeShowCounter{0};
+	lcd.printer().print(header);
+	lcd.printer().print(nextVal);
+	strokeShowCounter++;
+	if (strokeShowCounter >= 3)
+	{
+		strokeShowCounter = 0;
+		prevVal = nextVal;
+	}
+}
+int prevStrokesLeft{0}, prevStrokesRight{0};
+int prevMsgs{0};
 void paddleImuLogging()
 {
     unsigned long timeNow = millis();
-    if (timeToRefreshScreen_paddleImu(timeNow))
+    //if (timeToRefreshScreen_paddleImu(timeNow))
+    if (prevMsgs != numOfMsgs)
     {
+    	prevMsgs = numOfMsgs;
 #if 0
         paddleImuReport.decodeAngularPosition();
         paddleImuReport.calculateTimeOnSide();
 #endif
         lcd.clear();
+        lcd.smallText();
         lcd.row(0);
-        //lcd.smallText();
-//        lcd.printer().print(numOfMsgs);
-//        lcd.row(1);
-//        lcd.printer().print(paddleImuReport.sn());
-//        lcd.row(2);
-//        lcd.printer().print(paddleImuReport.pitch());
-//        lcd.printer().print(paddleImuReport.yaw());
-//        lcd.row(2);
+        lcd.printer().print(paddleImuReport.pitch());
+        lcd.row(1);
+        lcd.printer().print(paddleImuReport.roll());
+        lcd.row(2);
+        lcd.printer().print(paddleImuReport.getPositionStr());
+        lcd.row(3);
+    	lcd.printer().print("L:");
+    	lcd.printer().print(paddleImuReport.getStats().strokesLeft);
+    	lcd.printer().print(" ");
+    	lcd.printer().print(paddleImuReport.getStats().leftDeltaTime);
+    	lcd.row(4);
+    	lcd.printer().print("R:");
+    	lcd.printer().print(paddleImuReport.getStats().strokesRight);
+    	lcd.printer().print(" ");
+    	lcd.printer().print(paddleImuReport.getStats().rightDeltaTime);
+
+#if 1
+//        if (paddleImuReport.numStrokesLeft() > prevStrokesLeft)
+//        {
+//        	delayedStrokeShow("L:", paddleImuReport.numStrokesLeft(), prevStrokesLeft);
+//        }
+//        else if (paddleImuReport.numStrokesRight() > prevStrokesRight)
+//        {
+//        	delayedStrokeShow("R:", paddleImuReport.numStrokesRight(), prevStrokesRight);
+//        }
+#else
+        lcd.printer().print(static_cast<int>(paddleImuReport.getPosition()));
+        lcd.printer().print(';');
+        lcd.printer().print(static_cast<int>(paddleImuReport.getGivenPosition()));
+#endif
+//        lcd.printer().print(paddleImuReport.numStrokesLeft());
+//        lcd.printer().print(paddleImuReport.numStrokesRight());
+#if 0
         lcd.printer().print(paddleImuReport.roll());
         lcd.row(1);
-        lcd.printer().print(paddleImuReport.getTimeOnSide());
+        lcd.printer().print(paddleImuReport.getSideStr());
         lcd.row(2);
-        lcd.printer().print(paddleImuReport.getLeftToRightRatio());
-        if (timeNow - prevTimeStats >= STATS_INTERVAL)
-        {
-            prevTimeStats = timeNow;
-            paddleImuReport.resetSide();
-        }
-        else
-        {
-        }
+        lcd.printer().print(paddleImuReport.getTimeOnSide());
+
+//        lcd.printer().print(paddleImuReport.getTimeOnSide());
+//        lcd.printer().print(paddleImuReport.getLeftToRightRatio());
+//        if (timeNow - prevTimeStats >= STATS_INTERVAL)
+//        {
+//            prevTimeStats = timeNow;
+//            paddleImuReport.resetSide();
+//        }
+//        else
+//        {
+//        }
+#endif
         prevTimeRefreshed = timeNow;
         lcd.display();
         numOfMsgs = 0;

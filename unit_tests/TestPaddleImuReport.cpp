@@ -6,12 +6,21 @@ class TestPaddleImuReport : public ::testing::Test {
 public:
 
     TestPaddleImuReport()
+#if 0
 	: leftCatch{-50,-90, 10},
 	  leftStroke{-50,-40, 20},
 	  leftExit{-50,-10, 10},
 	  rightCatch{-30,45, 10},
 	  rightStroke{-20,20, 20},
 	  rightExit{-10,10, 10}
+#else
+	: leftCatch{-50,-80, 10, 10},
+	  leftStroke{-35,-75, 5, 0},
+	  leftExit{0, 0, 0},
+	  rightCatch{-40, 40, 10, 10},
+	  rightStroke{-20, 50, 0, 10},
+	  rightExit{0, 0, 0}
+#endif
 	{}
     void SetUp() {
         r.init();
@@ -139,6 +148,7 @@ TEST_F(TestPaddleImuReport, calculateTimeOnSide_rightToLeftOneStroke)
     EXPECT_EQ(0, r.getTotalTimeOnLeft());
 }
 #endif
+#if 0
 TEST_F(TestPaddleImuReport, positions_left_right)
 {
 	inputOneMessage("0;0;0;0;0");
@@ -208,7 +218,7 @@ TEST_F(TestPaddleImuReport, positions_lost_and_found)
     Arduino::timeNow = 0;
 	inputOneMessage("0;0;-40;40;0");
 	EXPECT_EQ(Position::rightCatch, r.getPosition());
-	Arduino::timeNow = 1000;
+	Arduino::timeNow = 2000;
 	inputOneMessage("0;0;-15;-1;0"); //straight to traverse left
 	EXPECT_EQ(Position::unknown, r.getPosition());
 	inputOneMessage("0;0;-40;40;0");
@@ -216,3 +226,74 @@ TEST_F(TestPaddleImuReport, positions_lost_and_found)
 	EXPECT_EQ(0, r.numStrokesLeft());
 	EXPECT_EQ(0, r.numStrokesRight());
 }
+#elif 0
+TEST_F(TestPaddleImuReport, positions_left_right)
+{
+	EXPECT_EQ(0, r.numStrokesLeft());
+	EXPECT_EQ(0, r.numStrokesRight());
+	inputOneMessage("0;0;0;0;0");
+	EXPECT_EQ(Position::unknown, r.getPosition());
+	inputOneMessage("0;0;-39;-69;0");
+	EXPECT_EQ(Position::unknown, r.getPosition());
+	inputOneMessage("0;0;-39;-70;0");
+	EXPECT_EQ(Position::unknown, r.getPosition());
+	inputOneMessage("0;0;-40;-91;0");
+	EXPECT_EQ(Position::unknown, r.getPosition());
+	inputOneMessage("0;0;-50;-90;0");
+	EXPECT_EQ(Position::leftCatch, r.getPosition());
+	inputOneMessage("0;0;-41;-75;0");
+	EXPECT_EQ(Position::leftCatch, r.getPosition());
+	inputOneMessage("0;0;-40;-70;0");
+	EXPECT_EQ(Position::leftStroke, r.getPosition());
+	inputOneMessage("0;0;-40;-1;0");
+	EXPECT_EQ(Position::leftStroke, r.getPosition());
+	inputOneMessage("0;0;-40;1;0");
+	EXPECT_EQ(Position::traverseRight, r.getPosition());
+	EXPECT_EQ(1, r.numStrokesLeft());
+	EXPECT_EQ(0, r.numStrokesRight());
+	inputOneMessage("0;0;-40;40;0");
+	EXPECT_EQ(Position::rightCatch, r.getPosition());
+	inputOneMessage("0;0;-21;50;0");
+	EXPECT_EQ(Position::rightCatch, r.getPosition());
+	inputOneMessage("0;0;-20;50;0");
+	EXPECT_EQ(Position::rightStroke, r.getPosition());
+	inputOneMessage("0;0;-20;0;0");
+	EXPECT_EQ(Position::traverseLeft, r.getPosition());
+	EXPECT_EQ(1, r.numStrokesLeft());
+	EXPECT_EQ(1, r.numStrokesRight());
+	inputOneMessage("0;0;-50;-90;0");
+	EXPECT_EQ(Position::leftCatch, r.getPosition());
+}
+#else
+TEST_F(TestPaddleImuReport, positions_left_right)
+{
+	EXPECT_EQ(0, r.numStrokesLeft());
+	EXPECT_EQ(0, r.numStrokesRight());
+	inputOneMessage("0;0;0;0;0");
+	EXPECT_EQ(Position::unknown, r.getPosition());
+	inputOneMessage("0;0;-39;-69;0");
+	EXPECT_EQ(Position::unknown, r.getPosition());
+	inputOneMessage("0;0;-39;-70;0");
+	EXPECT_EQ(Position::unknown, r.getPosition());
+	inputOneMessage("0;0;-40;-91;0");
+	EXPECT_EQ(Position::unknown, r.getPosition());
+	inputOneMessage("0;0;-50;-90;0");
+	EXPECT_EQ(Position::leftCatch, r.getPosition());
+	inputOneMessage("0;0;-41;-75;0");
+	EXPECT_EQ(Position::leftCatch, r.getPosition());
+	inputOneMessage("0;0;-40;1;0");
+	EXPECT_EQ(Position::traverseRight, r.getPosition());
+	EXPECT_EQ(1, r.numStrokesLeft());
+	EXPECT_EQ(0, r.numStrokesRight());
+	inputOneMessage("0;0;-40;40;0");
+	EXPECT_EQ(Position::rightCatch, r.getPosition());
+	inputOneMessage("0;0;-21;50;0");
+	EXPECT_EQ(Position::rightCatch, r.getPosition());
+	inputOneMessage("0;0;-20;0;0");
+	EXPECT_EQ(Position::traverseLeft, r.getPosition());
+	EXPECT_EQ(1, r.numStrokesLeft());
+	EXPECT_EQ(1, r.numStrokesRight());
+	inputOneMessage("0;0;-50;-90;0");
+	EXPECT_EQ(Position::leftCatch, r.getPosition());
+}
+#endif

@@ -22,7 +22,9 @@ PaddleImuReport::PaddleImuReport()
   rightStroke{},
   rightExit{},
   currPos{Position::unknown},
-  prevTimePosUpdated{0}
+  prevTimePosUpdated{0},
+  prevTimePositionChecked{0},
+  updated{false}
 {
 }
 void PaddleImuReport::init()
@@ -38,6 +40,12 @@ void PaddleImuReport::push(const String& s)
 #endif
     message += separator;
     message += s;
+}
+void PaddleImuReport::push(const TiltValues& tilt)
+{
+	pitch_ = static_cast<int>(tilt.pitch);
+	roll_ = static_cast<int>(tilt.roll);
+	yaw_ = static_cast<int>(tilt.yaw);
 }
 void PaddleImuReport::write(/*Logger& logger*/)
 {
@@ -78,6 +86,26 @@ void PaddleImuReport::decodeAngularPosition()
       { // yaw
           //Serial.printf("Yaw: %s \n\r", pch);
           yaw_ = atoi(pch);
+      }
+      else if (i == 5)
+      {
+    	  currPos = static_cast<Position>(atoi(pch));
+      }
+      else if (i == 6)
+      {
+    	  stats.strokesLeft = atoi(pch);
+      }
+      else if (i == 7)
+      {
+    	  stats.strokesRight = atoi(pch);
+      }
+      else if (i == 8)
+      {
+    	  stats.leftDeltaTime = atoi(pch);
+      }
+      else if (i == 9)
+      {
+    	  stats.rightDeltaTime = atoi(pch);
       }
       i++;
     }
@@ -182,20 +210,52 @@ void PaddleImuReport::setLimits(const Tilt& _leftCatch, const Tilt& _leftStroke,
 	rightStroke = _rightStroke;
 	rightExit = _rightExit;
 }
-bool PaddleImuReport::isWithin(const Tilt& tilt, const Tilt& candidate) const
+bool PaddleImuReport::isRollWithin(const Tilt& tilt, const Tilt& candidate) const
 {
-	const int limit = candidate.limit;
+	const int limit = candidate.limitRoll;
 	bool const retVal = ((tilt.roll >= candidate.roll) and (tilt.roll - candidate.roll <= limit))
     	    	    or ((candidate.roll > tilt.roll) and (candidate.roll - tilt.roll <= limit));
 	//printf("retVal: %u [%d][%d] \n", retVal, tilt.roll, candidate.roll);
 	return retVal;
 }
+bool PaddleImuReport::isPitchWithin(const Tilt& tilt, const Tilt& candidate) const
+{
+	const int limit = candidate.limitPitch;
+	bool const retVal = ((tilt.pitch >= candidate.pitch) and (tilt.pitch - candidate.pitch <= limit))
+    	    	    or ((candidate.pitch > tilt.pitch) and (candidate.pitch - tilt.pitch <= limit));
+	//printf("retVal: %u [%d][%d] \n", retVal, tilt.roll, candidate.roll);
+	return retVal;
+}
+bool PaddleImuReport::isRollAbove(const Tilt& tilt, const Tilt& candidate) const
+{
+	return tilt.roll >= candidate.roll;
+}
+bool PaddleImuReport::isRollBelow(const Tilt& tilt, const Tilt& candidate) const
+{
+	return tilt.roll <= candidate.roll;
+}
+bool PaddleImuReport::isPitchAbove(const Tilt& tilt, const Tilt& candidate) const
+{
+	return tilt.pitch >= candidate.pitch;
+}
+bool PaddleImuReport::isWithin(const Tilt& tilt, const Tilt& candidate) const
+{
+	return /*isPitchWithin(tilt, candidate) and*/ isRollWithin(tilt, candidate);
+}
 void PaddleImuReport::updatePosition()
 {
 	unsigned long timeNow = millis();
-	unsigned long const positionLostThreshold{1000};
+	if (timeNow < prevTimePositionChecked + positionCheckPeriod)
+	{
+		updated = false;
+		return;
+	}
+	updated = true;
+	prevTimePositionChecked = timeNow;
+	unsigned long const positionLostThreshold{2000};
     Tilt const tilt{pitch(), roll(), 0};
     Position const prevPos{currPos};
+    const Tilt middlePoint{0, 0, 0};
     if (currPos == Position::unknown)
     {
     	if (isWithin(tilt, leftCatch))
@@ -207,13 +267,87 @@ void PaddleImuReport::updatePosition()
     		currPos = Position::rightCatch;
     	}
     }
+#if 0
     else if (currPos == Position::leftCatch)
     {
-    	if (isWithin(tilt, leftStroke))
+    	if (isPitchWithin(tilt, leftStroke) and isRollAbove(tilt, leftStroke))
     	{
     		currPos = Position::leftStroke;
     	}
     }
+    else if (currPos == Position::leftStroke)
+    {
+    	if (isRollAbove(tilt, middlePoint))
+    	{
+    		currPos = Position::traverseRight;
+    		stats.strokesLeft++;
+    	}
+    }
+#else
+    else if (currPos == Position::leftCatch)
+    {
+//    	if (isRollAbove(tilt, middlePoint))
+//    	{
+//    		currPos = Position::traverseRight;
+//    		stats.strokesLeft++;
+//    	}
+    	if (not isWithin(tilt, leftCatch))
+    	{
+    		currPos = Position::traverseRight;
+    		stats.strokesLeft++;
+    		stats.leftDeltaTime = timeNow - stats.timeOnLeftStart;
+    		stats.timeOnLeftStart = timeNow;
+    	}
+    }
+#endif
+    else if (currPos == Position::traverseRight)
+    {
+    	if (isWithin(tilt, rightCatch))
+    	{
+    		currPos = Position::rightCatch;
+    	}
+    }
+#if 0
+    else if (currPos == Position::rightCatch)
+    {
+    	if (isRollWithin(tilt, rightStroke) and isPitchAbove(tilt, rightStroke))
+    	{
+    		currPos = Position::rightStroke;
+    	}
+    }
+    else if (currPos == Position::rightStroke)
+    {
+    	if (isRollBelow(tilt, middlePoint))
+    	{
+    		currPos = Position::traverseLeft;
+    		stats.strokesRight++;
+    	}
+    }
+#else
+    else if (currPos == Position::rightCatch)
+    {
+//    	if (isRollBelow(tilt, middlePoint))
+//    	{
+//    		currPos = Position::traverseLeft;
+//    		stats.strokesRight++;
+//    	}
+    	if (not isWithin(tilt, rightCatch))
+    	{
+    		currPos = Position::traverseLeft;
+    		stats.strokesRight++;
+    		stats.rightDeltaTime = timeNow - stats.timeOnRightStart;
+    		stats.timeOnRightStart = timeNow;
+    	}
+    }
+#endif
+    else if (currPos == Position::traverseLeft)
+    {
+    	if (isWithin(tilt, leftCatch))
+    	{
+    		currPos = Position::leftCatch;
+    	}
+    }
+#if 0
     else if (currPos == Position::leftStroke)
     {
     	if (isWithin(tilt, leftExit))
@@ -265,6 +399,7 @@ void PaddleImuReport::updatePosition()
     		currPos = Position::leftCatch;
     	}
     }
+#endif
     if (currPos != prevPos)
     {
     	prevTimePosUpdated = timeNow;
@@ -273,4 +408,50 @@ void PaddleImuReport::updatePosition()
     {
     	currPos = Position::unknown;
     }
+}
+bool PaddleImuReport::timeToSend() const
+{
+	return updated;
+}
+String PaddleImuReport::getPositionStr() const
+{
+	String retVal;
+	switch(currPos)
+	{
+		case Position::unknown:
+			retVal = "UNK";
+			break;
+		case Position::leftCatch:
+			retVal = "LCA";
+			break;
+#if 0
+		case Position::leftStroke:
+			retVal = "LST";
+			break;
+#endif
+		case Position::traverseRight:
+			retVal = "RTR";
+			break;
+		case Position::traverseLeft:
+			retVal = "LTR";
+			break;
+		case Position::rightCatch:
+			retVal = "RCA";
+			break;
+#if 0
+		case Position::rightStroke:
+			retVal = "RST";
+			break;
+		case Position::leftExit:
+			retVal = "LEX";
+			break;
+		case Position::rightExit:
+			retVal = "REX";
+			break;
+#endif
+		default:
+			retVal = "ERR";
+			break;
+	}
+	return retVal;
 }
